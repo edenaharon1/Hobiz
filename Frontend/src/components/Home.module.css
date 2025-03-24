@@ -369,7 +369,7 @@ h1::after {
 .commentsSection {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  /* הסרנו את height: 10%; */
 }
 
 .commentsSection h3 {

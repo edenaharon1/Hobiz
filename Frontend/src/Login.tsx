@@ -21,7 +21,8 @@ const Login: React.FC = () => {
     const handleGoogleLoginSuccess = async (credentialResponse: any) => {
         console.log(import.meta.env.VITE_TEST_ENV);
         try {
-            const response = await axios.post(`http://${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, {
+            console.log("mishtane:",);
+            const response = await axios.post(`http://localhost:3001/auth/login`, {
                 token: credentialResponse.credential,
             });
     
@@ -42,7 +43,7 @@ const Login: React.FC = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://${import.meta.env.REACT_APP_API_URL}/auth/login', { email, password });
+            const response = await axios.post('http://localhost:3001/auth/login', { email, password });
 
             if (response.status === 200) { // בדיקה שהבקשה הצליחה
                 localStorage.setItem('authToken', response.data.accessToken);

@@ -67,7 +67,7 @@ const Home: React.FC = () => {
                 const formData = new FormData();
                 formData.append("file", postData.image);
     
-                const imageResponse = await axios.post("http://${import.meta.env.REACT_APP_API_URL}/files", formData, {
+                const imageResponse = await axios.post("http://localhost:3001/files", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${authToken}`,
@@ -78,7 +78,7 @@ const Home: React.FC = () => {
             }
     
             const response = await axios.post(
-                "http://localhost:3000/posts",
+                "http://localhost:3001/posts",
                 {
                     title: postData.title,
                     content: postData.content,
@@ -104,23 +104,30 @@ const Home: React.FC = () => {
         }
     };
 
+    interface Comment {
+        comment: string;
+        postId: string;
+        owner: string;
+        // מאפיינים נוספים
+    }
+    
     const handlePostClick = async (post: Post) => {
         try {
-            const postResponse = await axios.get(`http://${import.meta.env.REACT_APP_API_URL}/posts/${post._id}`);
+            const postResponse = await axios.get(`http://localhost:3001/posts/${post._id}`);
             const postData = postResponse.data;
-
-            const commentsUrl = `http://${import.meta.env.REACT_APP_API_URL}/comments/post/${post._id}`;
+    
+            const commentsUrl = `http://localhost:3001/comments/post/${post._id}`;
             const commentsResponse = await axios.get(commentsUrl);
-            const commentsData = commentsResponse.data;
-
+            const commentsData: Comment[] = commentsResponse.data; // סוג ספציפי
+    
             if (postData._id) {
                 setSelectedPost({
                     ...postData,
-                    comments: commentsData.map((comment: any) => ({
+                    comments: Array.isArray(commentsData) ? commentsData.map((comment) => ({ // בדיקה אם מערך
                         comment: comment.comment,
                         postId: comment.postId,
                         owner: comment.owner,
-                    })),
+                    })) : [], // מערך ריק אם לא מערך
                     likesCount: postData.likesCount,
                     _id: postData._id,
                 });
@@ -130,6 +137,7 @@ const Home: React.FC = () => {
             }
         } catch (error) {
             console.error("Error fetching post details or comments:", error);
+            alert("Error fetching post details. Please try again later."); // הודעת שגיאה למשתמש
             setSelectedPost(post);
         }
     };
@@ -153,7 +161,7 @@ const Home: React.FC = () => {
                 }
 
                 const response = await axios.post(
-                    "http://${import.meta.env.REACT_APP_API_URL}/comments",
+                    "http://localhost:3001/comments",
                     {
                         comment: newComment,
                         postId: selectedPost._id,
@@ -192,7 +200,7 @@ const Home: React.FC = () => {
             }
 
             const response = await axios.put(
-                `http://${import.meta.env.REACT_APP_API_URL}/posts/${postId}/like`,
+                `http://localhost:3001/posts/${postId}/like`,
                 {},
                 {
                     headers: {

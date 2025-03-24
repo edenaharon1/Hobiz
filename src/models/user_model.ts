@@ -4,7 +4,7 @@ export interface IUser {
   username: string;
   email: string;
   password: string;
-  _id?: string;
+  image?: string; // הוספת שדה image
   refreshToken?: string[];
 }
 
@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema<IUser>({
   password: {
     type: String,
     required: true,
+  },
+  image: { // הוספת שדה image
+    type: String,
+    default: null,
   },
   refreshToken: {
     type: [String],

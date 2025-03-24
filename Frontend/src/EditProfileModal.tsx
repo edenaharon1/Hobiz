@@ -28,15 +28,70 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose, us
         }
     };
 
-    const handleSave = () => {
-        const updatedUser = {
-            ...user,
-            username,
-            email,
-            image: imagePreview,
-        };
-        onSave(updatedUser);
-        onClose();
+    const handleSave = async () => {
+        console.log('handleSave called');
+        try {
+            let imageUrl = imagePreview;
+            if (image) {
+                imageUrl = await uploadImage(image);
+            }
+    
+            const updatedUser = {
+                username,
+                email,
+                image: imageUrl,
+            };
+    
+            console.log('updatedUser:', updatedUser);
+    
+            const response = await fetch(`http://localhost:3001/:id`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedUser),
+            });
+    
+            console.log('response:', response);
+    
+            if (!response.ok) {
+                throw new Error('Failed to update user');
+            }
+    
+            const updatedUserData = await response.json();
+    
+            console.log('responseData:', updatedUserData);
+    
+            onSave(updatedUserData);
+    
+            onClose();
+        } catch (error) {
+            console.error('Error updating user:', error);
+            // הצגת הודעת שגיאה למשתמש
+        }
+    };
+    
+    // פונקציה לדוגמה להעלאת תמונה
+    const uploadImage = async (file: File): Promise<string> => {
+        const formData = new FormData();
+        formData.append('file', file);
+    
+        try {
+            const response = await fetch('http://localhost:3001/file', { // הנח ש-endpoint ההעלאה הוא /upload
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to upload image');
+            }
+    
+            const data = await response.json();
+            return data.url; // החזרת URL של התמונה
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            throw error; // זריקת שגיאה כדי שה-handleSave יוכל לטפל בה
+        }
     };
 
     if (!isOpen) return null;
@@ -45,28 +100,47 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose, us
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                 <h2>Edit Profile</h2>
+
+                {imagePreview && (
+                    <img src={imagePreview} alt="Preview" className={styles.imagePreview} />
+                )}
+
+                <div className={styles.fileInputContainer}>
+                    <label className={styles.fileInputLabel} htmlFor="profileImage">
+                        {imagePreview ? 'Change Profile Picture' : 'Upload Profile Picture'}
+                    </label>
+                    <input
+                        id="profileImage"
+                        className={styles.fileInput}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                    />
+                </div>
+
                 <input
+                    className={styles.input}
                     type="text"
                     placeholder="Username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                 />
                 <input
+                    className={styles.input}
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                />
-                {imagePreview && (
-                    <img src={imagePreview} alt="Preview" className={styles.imagePreview} />
-                )}
-                <button onClick={handleSave}>Save</button>
-                <button onClick={onClose}>Cancel</button>
+
+                <div className={styles.buttonContainer}>
+                    <button className={`${styles.button} ${styles.saveButton}`} onClick={handleSave}>
+                        Save Changes
+                    </button>
+                    <button className={`${styles.button} ${styles.cancelButton}`} onClick={onClose}>
+                        Cancel
+                    </button>
+                </div>
             </div>
         </div>
     );

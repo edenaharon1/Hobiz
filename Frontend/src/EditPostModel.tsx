@@ -42,7 +42,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
             console.log("Post ID:", post._id);
             console.log("Auth Token:", token);
     
-            const response = await axios.put(`http://localhost:3000/posts/${post._id}`, {
+            const response = await axios.put(`http://localhost:3001/posts/${post._id}`, {
                 title: title,
                 content: content,
                 image: typeof image === 'string' ? image : undefined,
