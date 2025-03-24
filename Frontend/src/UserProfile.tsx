@@ -151,47 +151,47 @@ const UserProfile: React.FC = () => {
                     <img src={homeIcon} alt="Home" className={styles.homeIcon} />
                 </Link>
             </div>
-
-            <h1 className={showPostsModal ? styles.hidden : ""}>user profile</h1>
-
+    
+            <h1 className={showPostsModal ? styles.hidden : ""}>User Profile</h1>
+    
             <div className={styles.profileCard}>
                 <div className={styles.userInfo}>
                     <div className={styles.profileImageContainer}>
                         <img src={userImage} alt="User Profile" className={styles.profileImage} />
                     </div>
                     <div className={styles.userDetails}>
-                        <p className={styles.userDetail}>name: {userName}</p>
-                        <p className={styles.userDetail}>e-mail: {userEmail}</p>
+                        <p className={styles.userDetail}>Name: {userName}</p>
+                        <p className={styles.userDetail}>Email: {userEmail}</p>
                     </div>
                     <div className={styles.profileButtons}>
-                        <button className={styles.profileButton} onClick={handleShowPosts}>My posts</button>
-                        <button className={styles.profileButton} onClick={handleEditProfile}>Edit profile</button>
+                        <button className={styles.profileButton} onClick={handleShowPosts}>My Posts</button>
+                        <button className={styles.profileButton} onClick={handleEditProfile}>Edit Profile</button>
                     </div>
                 </div>
             </div>
-
+    
             {showPostsModal && (
                 <div className={styles.modalOverlay} onClick={handleClosePostsModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-                        <h2 className={styles.modalTitle}>my posts</h2>
+                        <h2 className={styles.modalTitle}>My Posts</h2>
                         <div className={styles.modalBody}>
                             {userPosts.map((post) => (
                                 <div key={post._id} className={styles.post}>
                                     <img src={post.image || "./Images/sample.png"} alt="Post" className={styles.postImage} />
                                     <div className={styles.postActions}>
                                         <span>{post.likesCount} ❤</span>
-                                        <span>{post.comments?.length || 0}</span>
-                                        <button className={styles.editButton} onClick={() => handleEditPost(post)}>edit</button>
-                                        <button className={styles.deleteButton} onClick={() => handleDeletePost(post._id)}>delete</button>
+                                        <span>{post.comments?.length || 0} Comments</span>
+                                        <button className={styles.editButton} onClick={() => handleEditPost(post)}>Edit</button>
+                                        <button className={styles.deleteButton} onClick={() => handleDeletePost(post._id)}>Delete</button>
                                     </div>
                                 </div>
                             ))}
                         </div>
-                        <button className={styles.closeButton} onClick={handleClosePostsModal}>close</button>
+                        <button className={styles.closeButton} onClick={handleClosePostsModal}>Close</button>
                     </div>
                 </div>
             )}
-
+    
             {editPost && (
                 <EditPostModal
                     post={editPost}

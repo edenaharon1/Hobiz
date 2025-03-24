@@ -59,9 +59,9 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ isOpen, onClose, onCr
                     onChange={handleImageChange}
                 />
                 {imagePreview && (
-                    <img src={imagePreview} alt="תצוגה מקדימה" className={styles.imagePreview} />
+                    <img src={imagePreview} alt="preview" className={styles.imagePreview} />
                 )}
-                <button onClick={handleCreate}>צור פוסט</button>
+                <button onClick={handleCreate}>post</button>
                 <button onClick={onClose}>סגור</button>
             </div>
         </div>

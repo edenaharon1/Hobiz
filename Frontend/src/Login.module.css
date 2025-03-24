@@ -1,138 +1,195 @@
-/* נוודא שהדף יתפוס את כל הגובה והרוחב */
+/* CSS Variables for consistent theming with green and yellow colors */
+:root {
+  --primary-color: #4d9e47; 
+  --secondary-color: #3e7a3a;
+  --accent-color: #4d9e47; 
+  --background-color: #f1f9ee; 
+  --card-background: rgba(255, 255, 255, 0.95);
+  --text-color: #2e502c; 
+  --text-light: #5c8a58; 
+  --border-radius: 10px;
+  --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s ease;
+}
+
+/* Base styles */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background-color: var(--background-color);
 }
 
-/* סגנון ללוגו */
-.logo {
-  width: 400px; /* ניתן לשנות את הגודל לפי הצורך */
-  margin-bottom: 0.1rem;
-}
-
-/* הקונטיינר הראשי */
+/* Main container */
 .loginContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* גובה מלא */
+  min-height: 100vh;
   width: 100%;
-  background: linear-gradient(180deg, #9fae86, #132a13);
+  background: linear-gradient(135deg, #e0f7d0 0%, #a9b3bd 100%); 
   box-sizing: border-box;
   text-align: center;
+  padding: 1rem;
 }
 
-/* כפתור התחברות עם גוגל */
-.googleLoginButton {
-  margin-top: 10px;
-  width: 100%;
-  max-width: 250px; /* למנוע התרחבות מוגזמת */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px; /* יישור */
+/* Logo styling */
+.logo {
+  width: 500px;
+  max-width: 90%;
+  margin-bottom: 0.5rem; /* צמצום המרווח */
+  transition: var(--transition);
 }
 
-/* כרטיס הלוגין */
+.logo:hover {
+  transform: scale(1.02);
+}
+
+/* Login card */
 .loginCard {
-  background: rgba(207, 198, 198, 0.7); /* הוספת שקיפות */
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 300px; /* הגדרת רוחב קבוע */
-  margin: 0 auto; /* מיקום במרכז */
+  background: var(--card-background);
+  padding: 2.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 350px;
+  max-width: 100%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  transition: var(--transition);
+  border-top: 4px solid var(--accent-color); 
 }
 
-/* כותרת משנה */
+/* Subtitle */
 .loginSubtitle {
   font-size: 1.1rem;
-  color: #000000;
-  line-height: 1.5;
+  color: var(--text-color);
+  line-height: 1.6;
   max-width: 500px;
+  margin-bottom: 0.5rem; /* צמצום המרווח */
 }
 
-/* קבוצת קלט */
+/* Input group */
 .inputGroup {
   position: relative;
   margin-bottom: 1.5rem;
   width: 100%;
-  display: flex;
-  justify-content: center;
 }
 
-/* אייקונים לקלט */
+/* Input icons */
 .inputIcon {
   position: absolute;
   top: 50%;
-  left: 10px;
+  left: 12px;
   transform: translateY(-50%);
-  color: #888;
+  color: var(--text-light);
+  pointer-events: none;
 }
 
-/* קלטים */
+/* Input fields */
 .loginInput {
   width: 100%;
-  padding: 12px 10px 12px 40px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 14px 16px 14px 40px;
+  border: 1px solid #c9e3c7; 
+  border-radius: var(--border-radius);
   font-size: 1rem;
-  margin: 0;
+  box-sizing: border-box;
+  transition: var(--transition);
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
-/* כפתור כניסה */
+.loginInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(77, 158, 71, 0.15); 
+}
+
+/* Main login button */
 .loginButton {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   font-size: 1rem;
-  color: #000000;
-  background: #c9184a;
+  font-weight: 600;
+  color: white;
+  background: var(--primary-color);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   cursor: pointer;
   margin-top: 1rem;
+  transition: var(--transition);
 }
 
 .loginButton:hover {
-  background: #A6C48A;
+  background: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* כפתור שחזור סיסמה */
-.Forgotpassword {
+.loginButton:active {
+  transform: translateY(0);
+}
+
+/* Google login button */
+.googleLoginButton {
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  background-color: white;
+  border: 1px solid #c9e3c7; 
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  transition: var(--transition);
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.googleLoginButton:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Secondary buttons (forgot password & signup) */
+.Forgotpassword, .signupButton {
   width: 150px;
-  padding: 8px;
+  padding: 10px;
   font-size: 0.9rem;
-  color: #ffffff;
-  background: #00171f;
+  font-weight: 500;
+  color: var(--text-color); 
+  background: var(--accent-color); 
   border: none;
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   cursor: pointer;
   margin-top: 1.5rem;
+  transition: var(--transition);
 }
 
-.Forgotpassword:hover {
-  background: #A6C48A;
+.Forgotpassword:hover, .signupButton:hover {
+  background: #3e7a3a; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* כפתור הרשמה */
-.signupButton {
-  width: 150px;
-  padding: 8px;
-  font-size: 0.9rem;
-  color: #ffffff;
-  background: #00171f;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 1.5rem;
+.Forgotpassword:active, .signupButton:active {
+  transform: translateY(0);
 }
 
-.signupButton:hover {
-  background: #A6C48A;
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .loginCard {
+    padding: 2rem 1.5rem;
+    width: 300px;
+  }
+  
+  .logo {
+    width: 240px;
+  }
 }
