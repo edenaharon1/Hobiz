@@ -1,0 +1,134 @@
+:root {
+  --primary-color: #4caf50; /* A more vivid green */
+  --secondary-color: #388e3c; /* Darker green */
+  --accent-color: #ffeb3b; /* Bright yellow for accents */
+  --background-color: #e8f5e9; /* Soft light green background */
+  --card-background: rgba(255, 255, 255, 0.9); /* Semi-transparent white for card */
+  --text-color: #1b5e20; /* Dark green text for better readability */
+  --text-light: #4a4a4a; /* Gray for lighter text */
+  --border-radius: 12px; /* More rounded corners */
+  --box-shadow: 0 16px 30px rgba(0, 0, 0, 0.15); /* Softer shadow */
+  --transition: all 0.2s ease-in-out; /* Snappier transitions */
+}
+
+/* General Background */
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, #c8e6c9, #a9b3bd);
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  padding-top: 60px;
+}
+
+/* Title */
+h1 {
+  font-size: 34px; /* Increased size */
+  color: var(--text-color);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+  margin-bottom: 20px; /* Reduced space */
+}
+
+/* Home Button */
+.homeButton {
+  position: absolute;
+  top: 15px; /* Slightly higher */
+  right: 15px; /* Consistent with top */
+}
+
+.homeIcon {
+  width: 35px; /* Increased size */
+  height: 35px; /* Increased size */
+  cursor: pointer;
+}
+
+/* Profile Card */
+.profileCard {
+  background: var(--card-background);
+  padding: 2.5rem; /* More padding for spaciousness */
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 85%; /* Slight expansion */
+  max-width: 650px; /* Slightly larger max width */
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Profile Image */
+.profileImage {
+  width: 130px; /* Increased image size */
+  height: 130px; /* Increased image size */
+  border-radius: 50%;
+  border: 3px solid var(--accent-color); /* Added border for emphasis */
+}
+
+/* User Details */
+.userDetail {
+  margin: 8px 0; /* Increased margin for spacing */
+  font-size: 1.5rem; /* Increased text size */
+  color: var(--text-light); /* Use lighter text for better distinction */
+  font-weight: bold;  
+}
+
+/* Profile Buttons */
+.profileButtons {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Increased gap for clarity */
+  margin-top: 30px; /* Increased margin */
+}
+
+.profileButton {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 25px; /* Increased button size */
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1.1rem; 
+  font-weight: 600; /* Bolder text for emphasis */
+  transition: background-color var(--transition);
+}
+
+.profileButton:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: var(--card-background);
+  padding: 25px; /* Increased padding */
+  border-radius: var(--border-radius);
+  text-align: center;
+  width: 90vw;
+  max-width: 650px; /* Same as card */
+  box-shadow: var(--box-shadow);
+}
+
+/* Close Button */
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 18px; /* Slightly larger */
+  cursor: pointer;
+  color: var(--text-color);
+  margin-top: 25px; /* Increased spacing */
+}

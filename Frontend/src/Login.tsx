@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styles from './Login.module.css';
-import logo from './Images/Logo.png';
+import logo from './Images/logo (2).png';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLoginButton from "./components/GoogleLoginButton";
 import axios from 'axios';
+
 
 
 interface GoogleLoginButtonProps {
@@ -18,6 +19,7 @@ const Login: React.FC = () => {
 
 
     const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+        console.log(import.meta.env.VITE_TEST_ENV);
         try {
             const response = await axios.post(`http://${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, {
                 token: credentialResponse.credential,
@@ -66,9 +68,9 @@ const Login: React.FC = () => {
 
     return (
         <div className={styles.loginContainer}>
-            <img src={logo} alt="EcoShare Logo" className={styles.logo} />
+            <img src={logo} alt="Hobiz Logo" className={styles.logo} />
             <p className={styles.loginSubtitle}>
-                Welcome to EcoShare – share what you don’t need, help those who need, and connect with your community!
+             place where your hobbies come to life, and your passion connects with other people. 
             </p>
             <div className={styles.loginCard}>
                 <form onSubmit={handleLogin}>
@@ -105,7 +107,6 @@ const Login: React.FC = () => {
                     <GoogleLoginButton onSuccess={(credentialResponse) => handleGoogleLoginSuccess(credentialResponse)} />
                 </div>
             </div>
-            <button className={styles.Forgotpassword}>Forgot password?</button>
             <button className={styles.signupButton}>
                 <Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
             </button>

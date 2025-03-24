@@ -1,105 +1,205 @@
-/* סגנון ללוגו */
-.logo {
-  width: 400px; /* ניתן לשנות את הגודל לפי הצורך */
-  margin-bottom: 0.1rem;
+/* CSS Variables for consistent theming with green and yellow colors */
+:root {
+  --primary-color: #4d9e47; 
+  --secondary-color: #3e7a3a;
+  --accent-color: #4d9e47; 
+  --background-color: #f1f9ee; 
+  --card-background: rgba(255, 255, 255, 0.95);
+  --text-color: #2e502c; 
+  --text-light: #5c8a58; 
+  --border-radius: 10px;
+  --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --transition: all 0.3s ease;
 }
 
-/* הקונטיינר הראשי */
-.loginContainer {
+/* General Background */
+.profileContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  min-height: 100vh; /* גובה מלא */
+  background: linear-gradient(180deg, #d0e7d2, #204e4a);
+  min-height: 100vh;
   width: 100%;
-  background: linear-gradient(180deg, #9fae86, #132a13);
   box-sizing: border-box;
+  text-align: center;
+  padding-top: 60px;
+}
+
+/* Title */
+h1 {
+  font-size: 32px;
+  color: var(--text-color);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 30px;
+}
+
+/* Home Button */
+.homeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.homeIcon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+/* Profile Card */
+.profileCard {
+  background: var(--card-background);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Profile Image */
+.profileImageContainer {
+  margin-bottom: 20px;
+}
+
+.profileImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+/* User Details */
+.userDetails {
+  margin-top: 20px;
   text-align: center;
 }
 
-/* כרטיס הלוגין */
-.loginCard {
-  background:  rgba(207, 198, 198, 0.7); /* הוספת שקיפות */
-  padding: 2rem;
+.userDetail {
+  margin: 0;
+  font-size: 1.4rem;
+  font-family: 'Arial', sans-serif; 
+  color: var(--text-color);
+  font-weight: bold;  
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);  
+}
+
+/* Profile Buttons */
+.profileButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.profileButton {
+  background-color: var(--accent-color); /* Adjusted */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color var(--transition);
+}
+
+.profileButton:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Posts Section */
+.postsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  width: 80%;
+  max-width: 800px;
+  margin-top: 30px;
+}
+
+.post {
+  background: var(--card-background);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: var(--box-shadow);
+  text-align: center;
+  width: 200px;
+}
+
+.postImage {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 300px; /* הגדרת רוחב קבוע */
-  margin: 0 auto; /* מיקום במרכז */
+  margin-bottom: 10px;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: var(--card-background);
+  backdrop-filter: blur(6px);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  width: 80vw;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  box-shadow: var(--box-shadow);
 }
 
-/* כותרת משנה */
-.loginSubtitle {
-  font-size: 1.1rem;
-  color: #000000;
-  line-height: 1.5;
-  max-width: 500px;
-}
-
-/* קבוצת קלט */
-.inputGroup {
-  position: relative;
-  margin-bottom: 1.5rem;
+/* Text Area */
+.editTextArea {
   width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-/* אייקונים לקלט */
-.inputIcon {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  color: #888;
-}
-
-/* קלטים */
-.loginInput {
-  width: 100%;
-  padding: 12px 10px 12px 40px;
+  height: 80px;
+  margin-top: 10px;
+  padding: 8px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  margin: 0;
+  border-radius: var(--border-radius);
+  font-size: 16px;
 }
 
-/* כפתור כניסה */
-.loginButton {
-  width: 100%;
-  padding: 12px;
-  font-size: 1rem;
-  color: #000000;
-  background: #c9184a;
+/* Buttons in Modal */
+.saveButton {
+  background-color: var(--accent-color);
+  color: white;
   border: none;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: 10px;
 }
 
-.loginButton:hover {
-  background: #A6C48A;
+.saveButton:hover {
+  background-color: var(--secondary-color);
 }
 
-/* כפתור הרשמה */
-.signupButton {
-display: block; /* הופך את הכפתור לאלמנט block */
-width: 100%; /* תן לו לתפוס את כל הרוחב של הקונטיינר */
-max-width: 400px; /* הגבלת רוחב הכפתור */
-padding: 12px;
-font-size: 1rem;
-color: #ffffff;
-background: #c9184a;
-border: none;
-border-radius: 4px;
-cursor: pointer;
-margin-top: 1.5rem;
-text-align: center; /* מרכז את הטקסט בתוך הכפתור */
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-color);
+  margin-top: 20px;
 }
 
-.signupButton:hover {
-background: #A6C48A;
+.closeButton:hover {
+  color: var(--primary-color);
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from './Login.module.css';
-import logo from './Images/Logo.png';
+import logo from './Images/logo (2).png';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -13,13 +13,13 @@ const SignUp: React.FC = () => {
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/auth/register', {
+            const response = await axios.post('http://localhost:3001/auth/register', {
                 username: fullName,
                 email: email,
                 password: password
             });
             console.log("Sign Up Successful:", response.data);
-            navigate('/'); // מעבר לדף ההתחברות (Login)
+            navigate('/home'); // מעבר לדף ההתחברות (Login)
         } catch (error) {
             console.error("Sign Up Failed:", error);
         }

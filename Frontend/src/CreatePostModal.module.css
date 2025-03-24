@@ -1,0 +1,95 @@
+/* Background layer of the modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal content */
+.modalContent {
+  background: var(--glass-background); /* Using CSS variable */
+  padding: 20px;
+  border-radius: var(--border-radius-lg); /* Modern border radius */
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(4px); /* Modern backdrop blur */
+}
+
+/* Modal title */
+.modalContent h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--text-primary); /* Using CSS variable */
+}
+
+/* Input fields */
+.modalContent input,
+.modalContent textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
+  border-radius: var(--border-radius-md); /* Modern border radius */
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: var(--background-light); /* Using CSS variable for background */
+}
+
+/* Textarea specific styling */
+.modalContent textarea {
+  height: 150px;
+  resize: vertical; /* Allow resizing */
+}
+
+/* Button styles */
+.modalContent button:first-of-type {
+  background-color: var(--primary-color); /* Using CSS variable */
+  color: white;
+  font-weight: 600;
+  border: none;
+  padding: 10px;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.modalContent button:first-of-type:hover {
+  background-color: var(--primary-dark); /* Darker shade on hover */
+}
+
+/* Close button styles */
+.modalContent button:last-of-type {
+  background-color: #fffafa; /* Using CSS variable for close button */
+  color: #333;
+  border: none;
+  padding: 10px;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.modalContent button:last-of-type:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Image preview styling */
+.imagePreview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  margin-top: 10px;
+  border-radius: var(--border-radius-md); /* Modern border radius */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
+}
