@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import homeIcon from "./Images/home.png";
 import axios from "axios";
 import EditPostModal from "./EditPostModel";
+import EditProfileModal from './EditProfileModal';
 
 interface Post {
     _id: string;
@@ -24,20 +25,22 @@ const UserProfile: React.FC = () => {
     const [showPostsModal, setShowPostsModal] = useState<boolean>(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     const [editPost, setEditPost] = useState<Post | null>(null);
+    const [isEditProfileModalOpen, setIsEditProfileModalOpen] = useState(false);
+    const [user, setUser] = useState<any>(null);
 
     const navigate = useNavigate();
 
-    // טעינת פרטי המשתמש וטעינת הפוסטים של המשתמש
     useEffect(() => {
         const loadUserProfile = async () => {
             const userId = localStorage.getItem("userId");
             if (userId) {
                 try {
                     const response = await axios.get(`http://localhost:3000/${userId}`);
-                    const { user } = response.data;
-                    console.log("User data received:", user);  // בדוק אם הנתונים נטענים
-                    setUserName(user.username);  // עדכון שם המשתמש
-                    setUserEmail(user.email);    // עדכון האימייל
+                    const { user: userData } = response.data;
+                    console.log("User data received:", userData);
+                    setUserName(userData.username);
+                    setUserEmail(userData.email);
+                    setUser(userData); // שמור את נתוני המשתמש במצב
                 } catch (error) {
                     console.error("Error loading user data:", error);
                 }
@@ -48,7 +51,6 @@ const UserProfile: React.FC = () => {
         loadUserPosts();
     }, []);
 
-    // טעינת הפוסטים של המשתמש
     const loadUserPosts = async () => {
         try {
             const userId = localStorage.getItem("userId");
@@ -140,8 +142,24 @@ const UserProfile: React.FC = () => {
     };
 
     const handleEditProfile = () => {
-        // הוספת לוגיקה לעריכת פרופיל המשתמש
-        console.log("Edit profile clicked");
+        setIsEditProfileModalOpen(true);
+    };
+
+    const handleSaveProfile = async (updatedUser: any) => {
+        try {
+            const userId = localStorage.getItem("userId");
+            if (!userId) {
+                console.error("User ID not found");
+                return;
+            }
+            const response = await axios.put(`http://localhost:3000/${userId}`, updatedUser);
+            setUser(response.data);
+            setUserName(response.data.username);
+            setUserEmail(response.data.email);
+            setIsEditProfileModalOpen(false);
+        } catch (error) {
+            console.error('Error updating profile:', error);
+        }
     };
 
     return (
@@ -151,9 +169,9 @@ const UserProfile: React.FC = () => {
                     <img src={homeIcon} alt="Home" className={styles.homeIcon} />
                 </Link>
             </div>
-    
+
             <h1 className={showPostsModal ? styles.hidden : ""}>User Profile</h1>
-    
+
             <div className={styles.profileCard}>
                 <div className={styles.userInfo}>
                     <div className={styles.profileImageContainer}>
@@ -169,7 +187,7 @@ const UserProfile: React.FC = () => {
                     </div>
                 </div>
             </div>
-    
+
             {showPostsModal && (
                 <div className={styles.modalOverlay} onClick={handleClosePostsModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
@@ -191,12 +209,21 @@ const UserProfile: React.FC = () => {
                     </div>
                 </div>
             )}
-    
+
             {editPost && (
                 <EditPostModal
                     post={editPost}
                     onClose={() => setEditPost(null)}
                     onPostUpdated={handlePostUpdated}
+                />
+            )}
+
+            {isEditProfileModalOpen && (
+                <EditProfileModal
+                    isOpen={isEditProfileModalOpen}
+                    onClose={() => setIsEditProfileModalOpen(false)}
+                    user={user}
+                    onSave={handleSaveProfile}
                 />
             )}
         </div>

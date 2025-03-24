@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchPosts, Post } from "./api";
+import { fetchPosts, Post } from "./Api";
 import axios from "axios";
 import HomeComponents from './components/homeComponent';
 import styles from './components/Home.module.css'; // ייבוא סגנונות
@@ -67,7 +67,7 @@ const Home: React.FC = () => {
                 const formData = new FormData();
                 formData.append("file", postData.image);
     
-                const imageResponse = await axios.post("http://localhost:3000/files", formData, {
+                const imageResponse = await axios.post("http://${import.meta.env.REACT_APP_API_URL}/files", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${authToken}`,
@@ -106,10 +106,10 @@ const Home: React.FC = () => {
 
     const handlePostClick = async (post: Post) => {
         try {
-            const postResponse = await axios.get(`http://localhost:3000/posts/${post._id}`);
+            const postResponse = await axios.get(`http://${import.meta.env.REACT_APP_API_URL}/posts/${post._id}`);
             const postData = postResponse.data;
 
-            const commentsUrl = `http://localhost:3000/comments/post/${post._id}`;
+            const commentsUrl = `http://${import.meta.env.REACT_APP_API_URL}/comments/post/${post._id}`;
             const commentsResponse = await axios.get(commentsUrl);
             const commentsData = commentsResponse.data;
 
@@ -153,7 +153,7 @@ const Home: React.FC = () => {
                 }
 
                 const response = await axios.post(
-                    "http://localhost:3000/comments",
+                    "http://${import.meta.env.REACT_APP_API_URL}/comments",
                     {
                         comment: newComment,
                         postId: selectedPost._id,
@@ -192,7 +192,7 @@ const Home: React.FC = () => {
             }
 
             const response = await axios.put(
-                `http://localhost:3000/posts/${postId}/like`,
+                `http://${import.meta.env.REACT_APP_API_URL}/posts/${postId}/like`,
                 {},
                 {
                     headers: {

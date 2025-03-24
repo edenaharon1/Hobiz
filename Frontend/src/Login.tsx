@@ -6,6 +6,7 @@ import GoogleLoginButton from "./components/GoogleLoginButton";
 import axios from 'axios';
 
 
+
 interface GoogleLoginButtonProps {
     onSuccess: (credentialResponse: any) => void;
 }
@@ -18,6 +19,7 @@ const Login: React.FC = () => {
 
 
     const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+        console.log(import.meta.env.VITE_TEST_ENV);
         try {
             const response = await axios.post(`http://${import.meta.env.VITE_REACT_APP_API_URL}/auth/login`, {
                 token: credentialResponse.credential,

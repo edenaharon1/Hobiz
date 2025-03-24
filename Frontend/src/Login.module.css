@@ -164,7 +164,7 @@ html, body {
   font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-color); 
-  background: var(--accent-color); 
+  background: #4d9e47; 
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
