@@ -1,0 +1,55 @@
+
+/* Input group styling */
+.inputGroup {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.loginInput {
+  width: 100%;
+  padding: 10px 10px 10px 40px; /* Adds space for the icon */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Button styling */
+.loginButton {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  color: #fff;
+  background: #e91e63;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.loginButton:hover {
+  background: #d81b60;
+}
+
+.signupButton {
+  width: 150px;
+  padding: 8px;
+  font-size: 0.9rem;
+  color: #fff;
+  background: #1e6dae;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.signupButton:hover {
+  background: #1e88e5;
+}

@@ -1,0 +1,284 @@
+
+/* עיצוב כללי */
+.homeContainer {
+  display: flex;
+  overflow-y: auto; 
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, #d0e7d2, #204e4a); /* עדכון הצבעים */
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  position: relative;
+  padding-top: 60px;
+}
+
+/* סרגל ניווט - עיצוב צד ימין אנכי */
+.navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 200px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px 10px;
+  z-index: 100;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid #e0e0e0;
+}
+
+.username {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+}
+
+/* כפתורי פרופיל ויציאה בסרגל - אחד מתחת לשני, עם מסגרת זהה */
+.profileButton,
+.logoutButton {
+  background-color: #ffffff; /* צבע מותאם לדף התחברות */
+  color: #000000;
+  border: none;
+  height: 45px;
+  width: 100%;
+  max-width: 180px;
+  border-radius: 20px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+.profileButton:hover,
+.logoutButton:hover {
+  background-color: #114c47; /* צבע ריחוף */
+  transform: scale(1.05);
+}
+
+/* כפתור חזרה */
+.backButton {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+.backButton img {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+/* כותרת העמוד - עיצוב משופר */
+h1 {
+  font-size: 32px;
+  color: white;
+  margin-bottom: 50px;
+  position: sticky;
+  top: 60px;
+  background-color: inherit;
+  z-index: 99;
+  padding: 15px 0;
+  width: 100%;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h1::after {
+  content: "";
+  display: block;
+  height: 60px; /* גובה השורה הריקה */
+}
+
+/* אזור הפוסטים */
+.postsContainer {
+  display: grid;
+  overflow-y: auto; 
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  width: 80%;
+  max-width: 800px;
+}
+
+/* עיצוב פוסט */
+.post {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 60%;
+  aspect-ratio: 1 / 1;
+}
+
+.postImage {
+  width: 100%;
+  height: 70%;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* לייקים ותגובות */
+.postActions {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  font-size: 16px;
+}
+
+/* תיקון המודאל */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.modalContent {
+  background: rgb(211, 204, 204);
+  overflow-y: auto; 
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 60vw;
+  height: auto;  /* על מנת שהגובה יתעדכן לפי התוכן */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh; /* מגדיר גובה מרבי למודאל */
+}
+
+/* תיקון עיצוב גוף המודאל */
+.modalBody {
+  display: flex;
+  flex-direction: column; /* מוודא שהאלמנטים יהיו אחד מתחת לשני */
+  justify-content: center; /* ממקם את האלמנטים במרכז */
+  align-items: center; /* ממקם את האלמנטים במרכז גם בציר האופקי */
+  gap: 20px; /* רווח בין האלמנטים */
+  width: 100%; /* וודא שהגוף יתפוס את כל הרוחב */
+  text-align: center;
+  padding: 20px;
+}
+
+/* תמונה במודאל */
+.modalImage {
+  width: 45%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* תגובות */
+.commentsSection {
+  width: 40%;
+  text-align: left;
+}
+
+/* רשימת התגובות */
+.commentsListContainer {
+  max-height: 250px;  /* גבול גובה לתיבת התגובות */
+  overflow-y: auto;   /* מאפשר גלילה אם התגובות עוברות את הגבול */
+  border: 1px solid #0a0909;
+  padding: 10px;
+  border-radius: 5px;
+  background: #ffffff;
+  margin-bottom: 10px;
+  width: 100%; /* לוודא שהתיבה תופסת את כל הרוחב של המיכל שלה */
+}
+
+.commentsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.commentItem {
+  border-bottom: 1px solid #eee;
+  padding: 8px 0;
+}
+
+.commentItem:last-child {
+  border-bottom: none;
+}
+
+/* הוספת תגובה */
+.commentInputContainer {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.commentInput {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #040000;
+  border-radius: 5px;
+}
+
+.commentButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.commentButton:hover {
+  background-color: #0056b3;
+}
+
+.createPostButton {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: linear-gradient(145deg, #1a936f, #114c47);
+  color: white;
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  z-index: 1000;
+}
+
+.createPostButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+
+.likeIcon {
+  width: 20px; /* הגודל החדש של האייקון */
+  height: 20px;
+}
