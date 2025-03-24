@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "tsc && node ./dist/app.js",
-    "dev": " copy .env_dev .env && nodemon ./src/app.ts",
+   "dev": "concurrently \"nodemon src/app.ts\" \"npm run start --prefix Frontend\"",
     "test": " tsc && jest --detectOpenHandles --forceExit --coverage --runInBand",
     "testauth": " tsc && jest --detectOpenHandles --forceExit auth.test.ts --runInBand",
     "testpost": " tsc && jest --detectOpenHandles --forceExit posts.test.ts",
