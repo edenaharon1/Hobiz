@@ -1,0 +1,261 @@
+
+
+/* רקע כללי */
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, #d0e7d2, #204e4a);
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  padding-top: 60px;
+}
+
+/* כותרת */
+h1 {
+  font-size: 32px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 30px;
+}
+
+/* כפתור הבית */
+.homeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.homeIcon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+/* כרטיס פרופיל */
+.profileCard {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 80%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 2rem;
+}
+
+/* תמונת פרופיל */
+.profileImageContainer {
+  margin-bottom: 20px;
+}
+
+.profileImage {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+/* פרטי משתמש */
+.userDetails {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.userDetail {
+  margin: 0;
+  font-size: 1.4rem;
+  font-family: 'Arial', sans-serif; 
+  color: #333;
+  font-weight: bold;  
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);  
+}
+
+/* כפתורים */
+.profileButtons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.profileButton {
+  background-color: rgba(26, 147, 111, 0.6); /* ירוק עם שקיפות עדינה */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.profileButton:hover {
+  background-color: #114c47;
+}
+
+/* פוסטים */
+.postsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  width: 80%;
+  max-width: 800px;
+  margin-top: 30px;
+}
+
+.post {
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 200px;
+}
+
+.postImage {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.postActions {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.editButton,
+.deleteButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.editButton {
+  color: #007bff;
+}
+
+.editButton:hover {
+  color: #0056b3;
+}
+
+.deleteButton {
+  color: #ff4d4d;
+}
+
+.deleteButton:hover {
+  color: #cc0000;
+}
+
+/* מודאל */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80vw;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.modalTitle {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 22px;
+  color: #114c47;
+}
+
+.modalBody {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* טקסט */
+.editTextArea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* כפתורים במודאל */
+.saveButton {
+  background-color: #1a936f;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.saveButton:hover {
+  background-color: #114c47;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #333;
+  margin-top: 20px;
+}
+
+.closeButton:hover {
+  color: #000;
+}
+
+/* כפתור הרשמה נוסף */
+.signupButton2 {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  font-size: 1rem;
+  color: #fff;
+  background: #1a936f;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1.5rem;
+  text-align: center;
+  text-decoration: none;
+}
+
+.signupButton2:hover {
+  background: #114c47;
+}
