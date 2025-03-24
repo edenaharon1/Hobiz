@@ -1,0 +1,105 @@
+/* סגנון ללוגו */
+.logo {
+  width: 400px; /* ניתן לשנות את הגודל לפי הצורך */
+  margin-bottom: 0.1rem;
+}
+
+/* הקונטיינר הראשי */
+.loginContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* גובה מלא */
+  width: 100%;
+  background: linear-gradient(180deg, #9fae86, #132a13);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* כרטיס הלוגין */
+.loginCard {
+  background:  rgba(207, 198, 198, 0.7); /* הוספת שקיפות */
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px; /* הגדרת רוחב קבוע */
+  margin: 0 auto; /* מיקום במרכז */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* כותרת משנה */
+.loginSubtitle {
+  font-size: 1.1rem;
+  color: #000000;
+  line-height: 1.5;
+  max-width: 500px;
+}
+
+/* קבוצת קלט */
+.inputGroup {
+  position: relative;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* אייקונים לקלט */
+.inputIcon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+/* קלטים */
+.loginInput {
+  width: 100%;
+  padding: 12px 10px 12px 40px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* כפתור כניסה */
+.loginButton {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  color: #000000;
+  background: #c9184a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.loginButton:hover {
+  background: #A6C48A;
+}
+
+/* כפתור הרשמה */
+.signupButton {
+display: block; /* הופך את הכפתור לאלמנט block */
+width: 100%; /* תן לו לתפוס את כל הרוחב של הקונטיינר */
+max-width: 400px; /* הגבלת רוחב הכפתור */
+padding: 12px;
+font-size: 1rem;
+color: #ffffff;
+background: #c9184a;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+margin-top: 1.5rem;
+text-align: center; /* מרכז את הטקסט בתוך הכפתור */
+}
+
+.signupButton:hover {
+background: #A6C48A;
+}
