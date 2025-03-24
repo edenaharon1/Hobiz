@@ -1,0 +1,28 @@
+###
+
+GET http://localhost:3000/posts
+
+###
+
+GET http://localhost:3000/posts?owner=eden2
+
+###
+GET http://localhost:3000/posts/673c96220058b8ea0d460f42
+
+
+###
+POST http://localhost:3000/posts 
+Content-Type: application/json
+
+{
+    "owner": "eden2",
+    "title": "my first post",
+    "content": "this is my first post"
+}
+
+
+###
+DELETE http://localhost:3000/posts/84578544
+
+
+
