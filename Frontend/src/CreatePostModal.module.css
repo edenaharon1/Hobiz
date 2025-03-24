@@ -1,0 +1,101 @@
+/* שכבת הרקע של המודאל */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  /* תוכן המודאל */
+  .modalContent {
+    background: rgba(255, 255, 255, 0.9); /* לבן שקוף מעט */
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px); /* טשטוש רקע מודרני */
+  }
+
+  /* כותרת המודאל */
+  .modalContent h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #114c47;
+  }
+
+  /* שדות קלט */
+  .modalContent input,
+  .modalContent textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+  }
+
+  /* שדה טקסט */
+  .modalContent textarea {
+    height: 150px;
+    resize: vertical;
+  }
+
+  /* כפתור "צור פוסט" */
+  .modalContent button:first-of-type {
+    background-color: #1a936f;
+    color: white;
+    font-weight: 600;
+  }
+
+  .modalContent button:first-of-type:hover {
+    background-color: #114c47;
+  }
+
+  /* כפתור "סגור" */
+  .modalContent button:last-of-type {
+    background-color: #cccccc;
+    color: #333;
+  }
+
+  .modalContent button:last-of-type:hover {
+    background-color: #aaaaaa;
+  }
+
+  /* כפתור סגירה (X) */
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: #444;
+  }
+
+  .closeButton:hover {
+    color: #000;
+  }
+
+  /* תצוגת תמונה */
+  .imagePreview {
+    width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
