@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 const API_URL: string = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:3000";
 
 interface Post {
@@ -16,10 +18,10 @@ interface Post {
 }
 
 async function fetchPosts(): Promise<Post[] | null> {
-    console.log("Fetching posts from:", `${API_URL}/posts`); 
+    console.log("Fetching posts from:", `http://localhost:3001/posts`); 
     try {
         const authToken = localStorage.getItem('authToken');
-        const response = await fetch(`${API_URL}/posts`, {
+        const response = await fetch(`http://localhost:3001/posts`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

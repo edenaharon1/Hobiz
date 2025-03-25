@@ -27,6 +27,7 @@ type User = IUser & {
   accessToken?: string,
   refreshToken?: string,
   username: string,
+  _id?: string,
 };
 
 const testUser: User = {

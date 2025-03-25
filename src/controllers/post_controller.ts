@@ -30,60 +30,82 @@ class PostsController extends BaseController<IPost> {
     }
 
 
-  async likePost(req: Request, res: Response): Promise<void> {
-    try {
-        const postId = req.params.id;
-        if (!req.user) {
-            res.status(401).json({ message: "Unauthorized" });
-            return;
-        }
-        const userId = (req.user as { _id: string })._id;
-
-        console.log(`Processing like request for postId: ${postId}, userId: ${userId}`);
-
-        const post = await postModel.findById(postId);
-
-        if (!post) {
-            console.log(`Post not found for postId: ${postId}`);
-            res.status(404).json({ message: "Post not found" });
-            return;
-        }
-
-        console.log(`Found post: ${JSON.stringify(post)}`); // הוסף לוג כדי לראות את הפוסט שנמצא
-
-        const userLiked = post.likedBy && post.likedBy.includes(userId);
-
-        if (userLiked) {
-            post.likedBy = post.likedBy.filter((id) => id !== userId);
-            post.likesCount = Math.max(0, post.likesCount - 1); // ודא ש-likesCount לא שלילי
-            console.log(`User ${userId} unliked post ${postId}. New likesCount: ${post.likesCount}`);
-        } else {
-            if (!post.likedBy) {
-                post.likedBy = [];
+    async likePost(req: Request, res: Response): Promise<void> {
+        try {
+            const postId = req.params.id;
+            if (!req.user) {
+                res.status(401).json({ message: "Unauthorized" });
+                return;
             }
-            post.likedBy.push(userId);
-            post.likesCount++;
-            console.log(`User ${userId} liked post ${postId}. New likesCount: ${post.likesCount}`);
-        }
-
-        await post.save(); // שמירת השינויים במסד הנתונים
-
-        console.log(`Post ${postId} updated successfully. New post data: ${JSON.stringify(post)}`); // הוסף לוג כדי לראות את הפוסט לאחר העדכון
-
-        // ודא שאתה שולח את likedBy כראוי
-        res.json({ likesCount: post.likesCount, likedBy: post.likedBy || [] });
-        console.log(`Post ${postId} updated successfully. Response sent: ${JSON.stringify({ likesCount: post.likesCount, likedBy: post.likedBy || [] })}`); // הוסף לוג כדי לראות את התגובה שנשלחה
-
-    } catch (error) {
-        if (error instanceof Error) {
-            console.error(`Error liking post: ${error.message}`);
-            res.status(500).json({ message: error.message });
-        } else {
-            console.error(`Error liking post: ${String(error)}`);
-            res.status(500).json({ message: "An unknown error occurred." });
+            const userId = req.user;
+            console.log("User ID from token:", userId);
+            console.log(`Processing like request for postId: ${postId}, userId: ${userId}`);
+            console.log("userId:", userId, "typeof userId:", typeof userId);
+    
+            const post = await postModel.findById(postId);
+    
+            if (!post) {
+                console.log(`Post not found for postId: ${postId}`);
+                res.status(404).json({ message: "Post not found" });
+                return;
+            }
+    
+            if (post.likedBy) {
+                post.likedBy = post.likedBy.filter(id => id !== null);
+            }
+    
+            console.log(`Found post: ${JSON.stringify(post)}`);
+            
+            console.log("post.likedBy:", post.likedBy);
+            // בדיקה אם המשתמש כבר לייקק את הפוסט
+            let userLiked = false;
+            if (post.likedBy) {
+                for (let i = 0; i < post.likedBy.length; i++) {
+                    if (post.likedBy[i].toString() === userId.toString()) {
+                        userLiked = true;
+                        break;
+                    }
+                }
+            }
+            console.log(`User liked: ${userLiked}`);
+    
+            // עדכון כמות הלייקים ו-likedBy
+            if (userLiked) {
+                // אם המשתמש כבר לייקק את הפוסט, הסר את הלייק
+                post.likedBy = post.likedBy.filter((id) => id.toString() !== userId.toString());
+                post.likesCount = Math.max(0, post.likesCount - 1);
+                console.log(`User ${userId} unliked post ${postId}. New likesCount: ${post.likesCount}`);
+            } else {
+                // אם המשתמש לא לייקק את הפוסט, הוסף את הלייק
+                if (!post.likedBy) {
+                    post.likedBy = [];
+                }
+                post.likedBy.push(userId.toString());
+                post.likesCount++;
+                console.log(`User ${userId} liked post ${postId}. New likesCount: ${post.likesCount}`);
+            }
+    
+            console.log(`Post before save: ${JSON.stringify(post)}`);
+    
+            // שמירת השינויים במסד נתונים
+            await post.save();
+    
+            console.log(`Post ${postId} updated successfully. New post data: ${JSON.stringify(post)}`);
+    
+            // שליחת תגובה עם כמות הלייקים המעודכנת ו-likedBy
+            res.json({ likesCount: post.likesCount, likedBy: post.likedBy || [] });
+            console.log(`Post ${postId} updated successfully. Response sent: ${JSON.stringify({ likesCount: post.likesCount, likedBy: post.likedBy || [] })}`);
+    
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(`Error liking post: ${error.message}`);
+                res.status(500).json({ message: error.message });
+            } else {
+                console.error(`Error liking post: ${String(error)}`);
+                res.status(500).json({ message: "An unknown error occurred." });
+            }
         }
     }
-}
 
 async update(req: Request, res: Response): Promise<void> {
     console.log("req.body:", req.body); // הוסף לוג כאן

@@ -1,84 +1,115 @@
-/* Background layer of the modal */
 .modalOverlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 10000;
 }
 
-/* Modal content */
 .modalContent {
-    background: var(--glass-background); /* Modern glass background */
-    padding: 20px;
-    border-radius: var(--border-radius-lg); /* Rounded corners */
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
     text-align: center;
-    max-width: 500px;
     width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
     flex-direction: column;
-    box-shadow: var(--card-shadow); /* Soft shadow */
-    backdrop-filter: blur(4px); /* Blurred background effect */
+    gap: 1.5rem;
 }
 
-/* Modal title */
-.modalContent h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: var(--text-primary); /* Primary text color */
+h2 {
+    color: var(--text-color);
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
 }
 
-/* Input fields */
-.modalContent input {
+.input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Soft border */
-    border-radius: var(--border-radius-md); /* Rounded corners */
-    font-size: 16px;
-    box-sizing: border-box;
-    background-color: var(--background-light); /* Light background */
-}
-
-/* Button styles */
-.modalContent button {
-    background-color: var(--primary-color); /* Primary button color */
-    color: white; /* Button text color */
-    font-weight: 600;
-    border: none;
     padding: 12px;
-    border-radius: var(--border-radius-md);
-    cursor: pointer;
-    transition: var(--transition-fast); /* Fast transition for hover effects */
-    margin-bottom: 10px; /* Spacing between buttons */
+    border: 2px solid #eee;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
-.modalContent button:hover {
-    background-color: var(--primary-dark); /* Darker shade on hover */
+.input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
-/* Cancel button styles */
-.modalContent button:last-of-type {
-    background-color: #cccccc; /* Light gray for cancel */
-    color: #333; /* Dark color for text */
-}
-
-.modalContent button:last-of-type:hover {
-    background-color: rgba(255, 255, 255, 0.5); /* Light on hover */
-}
-
-/* Image preview styling */
-.imagePreview {
+.fileInputContainer {
     width: 100%;
-    max-height: 300px;
-    object-fit: contain;
-    margin-top: 10px;
-    border-radius: var(--border-radius-md); /* Rounded borders */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Soft border */
+    position: relative;
+    margin: 1rem 0;
+}
+
+.fileInput {
+    display: none;
+}
+
+.fileInputLabel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border: 2px dashed #ddd;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.fileInputLabel:hover {
+    border-color: var(--primary-color);
+    background-color: #f0f7f0;
+}
+
+.imagePreview {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin: 1rem auto;
+    border: 3px solid var(--primary-color);
+}
+
+.buttonContainer {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.saveButton {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.cancelButton {
+    background-color: #f5f5f5;
+    color: #666;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }

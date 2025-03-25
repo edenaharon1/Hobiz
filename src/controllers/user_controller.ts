@@ -25,7 +25,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
 export const updateUserProfile = async (req: Request, res: Response) => {
     try {
         const userId = req.params.id;
-        const { username, profileImage } = req.body;
+        const { username, email, image } = req.body; // קבלת image מ-req.body
 
         console.log("updateUserProfile called");
         console.log("userId:", userId);
@@ -33,7 +33,7 @@ export const updateUserProfile = async (req: Request, res: Response) => {
 
         const updatedUser = await userModel.findByIdAndUpdate(
             userId,
-            { username, profileImage },
+            { username, email, image }, // עדכון image
             { new: true }
         );
 

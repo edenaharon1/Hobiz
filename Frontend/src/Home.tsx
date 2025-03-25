@@ -24,13 +24,35 @@ const Home: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedPost && localStorage.getItem("authToken")) {
-            const userId = JSON.parse(localStorage.getItem("user") || "{}")._id;
-            setUserLiked(selectedPost.likedBy.includes(userId));
-        } else {
-            setUserLiked(false);
-        }
+        const checkLikeStatus = async () => {
+            if (selectedPost && localStorage.getItem("authToken")) {
+                const authToken = localStorage.getItem("authToken");
+                try {
+                    if (!authToken) {
+                        console.error("Auth token is null");
+                        return;
+                    }
+                    const decodedToken = JSON.parse(atob(authToken.split('.')[1]));
+                    const userId = decodedToken._id;
+    
+                    console.log("selectedPost:", selectedPost);
+                    console.log("selectedPost.likedBy:", selectedPost.likedBy);
+                    console.log("userId:", userId);
+    
+                    setUserLiked(selectedPost.likedBy.some(id => id === userId)); // שימוש ב-some()
+    
+                } catch (error) {
+                    console.error("Error decoding token:", error);
+                    setUserLiked(false);
+                }
+            } else {
+                setUserLiked(false);
+            }
+        };
+    
+        checkLikeStatus();
     }, [selectedPost]);
+    
 
     const loadPosts = async () => {
         try {
@@ -67,7 +89,7 @@ const Home: React.FC = () => {
                 const formData = new FormData();
                 formData.append("file", postData.image);
     
-                const imageResponse = await axios.post("http://${import.meta.env.REACT_APP_API_URL}/files", formData, {
+                const imageResponse = await axios.post("http://localhost:3001/files", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${authToken}`,
@@ -78,7 +100,7 @@ const Home: React.FC = () => {
             }
     
             const response = await axios.post(
-                "http://localhost:3000/posts",
+                "http://localhost:3001/posts",
                 {
                     title: postData.title,
                     content: postData.content,
@@ -106,10 +128,10 @@ const Home: React.FC = () => {
 
     const handlePostClick = async (post: Post) => {
         try {
-            const postResponse = await axios.get(`http://${import.meta.env.REACT_APP_API_URL}/posts/${post._id}`);
+            const postResponse = await axios.get(`http://localhost:3001/posts/${post._id}`);
             const postData = postResponse.data;
 
-            const commentsUrl = `http://${import.meta.env.REACT_APP_API_URL}/comments/post/${post._id}`;
+            const commentsUrl = `http://localhost:3001/comments/post/${post._id}`;
             const commentsResponse = await axios.get(commentsUrl);
             const commentsData = commentsResponse.data;
 
@@ -153,7 +175,7 @@ const Home: React.FC = () => {
                 }
 
                 const response = await axios.post(
-                    "http://${import.meta.env.REACT_APP_API_URL}/comments",
+                    "http://localhost:3001/comments",
                     {
                         comment: newComment,
                         postId: selectedPost._id,
@@ -185,40 +207,60 @@ const Home: React.FC = () => {
 
     const handleLikeClick = async (postId: string) => {
         try {
-            const authToken = localStorage.getItem("authToken");
+            const authToken = localStorage.getItem("authToken"); // קבלת טוקן אימות מה-localStorage
             if (!authToken) {
-                alert("User is not logged in");
+                alert("User is not logged in"); // הצגת התראה אם המשתמש לא מחובר
                 return;
             }
+            const decodedToken = JSON.parse(atob(authToken.split('.')[1]));
+            const userId = decodedToken._id; 
+
+            console.log("User ID from token:", userId); 
 
             const response = await axios.put(
-                `http://${import.meta.env.REACT_APP_API_URL}/posts/${postId}/like`,
-                {},
+                `http://localhost:3001/posts/${postId}/like`, // שליחת בקשת PUT לשרת
+                {}, // שליחת גוף ריק (אין צורך במידע נוסף)
                 {
                     headers: {
-                        Authorization: `Bearer ${authToken}`,
+                        Authorization: `Bearer ${authToken}`, // הוספת טוקן אימות לכותרות
                     },
                 }
             );
-
-            console.log("Like API response:", response.data); // הוסף log
-
-        if (selectedPost) {
-            setSelectedPost({
-                ...selectedPost,
-                likesCount: response.data.likesCount,
-                likedBy: response.data.likedBy,
-            });
-        }
-
-            if (likedPosts.includes(postId)) {
-                setLikedPosts(likedPosts.filter((id) => id !== postId));
-            } else {
-                setLikedPosts([...likedPosts, postId]);
+    
+            console.log("Like API response:", response.data); // הדפסת תגובת ה-API לקונסולה
+    
+            // עדכון selectedPost (אם קיים)
+            if (selectedPost && selectedPost._id === postId) {
+                setSelectedPost({
+                    ...selectedPost,
+                    likesCount: response.data.likesCount,
+                    likedBy: response.data.likedBy,
+                });
             }
+            console.log("selectedPost:", selectedPost);
+            console.log("likedPosts:", likedPosts);
+            setPosts((prevPosts) =>
+                prevPosts.map((post) =>
+                    post._id === postId
+                        ? { ...post, likesCount: response.data.likesCount, likedBy: response.data.likedBy }
+                        : post
+                )
+            );
+    
+            // עדכון likedPosts
+            setLikedPosts((prevLikedPosts) => {
+                if (prevLikedPosts.includes(postId)) {
+                    // אם הפוסט כבר לייקק, הסרת הלייק
+                    return prevLikedPosts.filter((id) => id !== postId);
+                } else {
+                    // אם הפוסט לא לייקק, הוספת לייק
+                    return [...prevLikedPosts, postId];
+                }
+                
+            });
         } catch (error) {
-            console.error("Error liking post:", error);
-            alert("Failed to like post");
+            console.error("Error liking post:", error); // הדפסת שגיאה לקונסולה
+            alert("Failed to like post"); // הצגת התראה על שגיאה
         }
     };
 
@@ -239,12 +281,15 @@ const Home: React.FC = () => {
                 handleAddComment={handleAddComment}
                 setIsModalOpen={setIsModalOpen}
                 handleCreatePost={handleCreatePost}
+                
             />
             {/* כפתור יצירת פוסט */}
             <button className={styles.createPostButton} onClick={() => setIsModalOpen(true)}>
                 +
             </button>
         </div>
+
+        
     );
 };
 

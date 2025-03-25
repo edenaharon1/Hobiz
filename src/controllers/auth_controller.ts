@@ -84,7 +84,7 @@ const login = async (req: Request, res: Response) => {
             return;
         }
         // generate token
-        const tokens = generateToken(user._id);
+        const tokens = generateToken(user._id.toString());
         if (!tokens) {
             res.status(500).send('Server Error');
             return;
@@ -146,7 +146,10 @@ const verifyRefreshToken = (refreshToken: string | undefined) => {
                 const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
                 user.refreshToken = tokens;
 
-                resolve(user);
+                resolve({
+                    ...user.toObject(),
+                    _id: user._id.toString(),
+                } as tUser);
             } catch (err) {
                 reject('fail');
                 return;
@@ -199,6 +202,7 @@ type Payload = {
 };
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    console.log("started authentication");
     const authorization = req.header('authorization');
     const token = authorization && authorization.split(' ')[1];
 

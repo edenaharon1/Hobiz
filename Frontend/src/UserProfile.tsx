@@ -35,7 +35,7 @@ const UserProfile: React.FC = () => {
             const userId = localStorage.getItem("userId");
             if (userId) {
                 try {
-                    const response = await axios.get(`http://localhost:3000/${userId}`);
+                    const response = await axios.get(`http://localhost:3001/${userId}`);
                     const { user: userData } = response.data;
                     console.log("User data received:", userData);
                     setUserName(userData.username);
@@ -59,7 +59,7 @@ const UserProfile: React.FC = () => {
                 return;
             }
 
-            const response = await axios.get(`http://localhost:3000/posts/user/${userId}`);
+            const response = await axios.get(`http://localhost:3001/posts/user/${userId}`);
             const processedPosts = response.data.map((post: any) => ({
                 ...post,
                 likesCount: post.likesCount || 0,
@@ -84,10 +84,10 @@ const UserProfile: React.FC = () => {
 
     const handlePostClick = async (post: Post) => {
         try {
-            const postResponse = await axios.get(`http://localhost:3000/posts/${post._id}`);
+            const postResponse = await axios.get(`http://localhost:3001/posts/${post._id}`);
             const postData = postResponse.data;
 
-            const commentsUrl = `http://localhost:3000/comments/post/${post._id}`;
+            const commentsUrl = `http://localhost:3001/comments/post/${post._id}`;
             const commentsResponse = await axios.get(commentsUrl);
             const commentsData = commentsResponse.data;
 
@@ -121,7 +121,7 @@ const UserProfile: React.FC = () => {
                 return;
             }
 
-            await axios.delete(`http://localhost:3000/posts/${postId}`, {
+            await axios.delete(`http://localhost:3001/posts/${postId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -152,7 +152,7 @@ const UserProfile: React.FC = () => {
                 console.error("User ID not found");
                 return;
             }
-            const response = await axios.put(`http://localhost:3000/${userId}`, updatedUser);
+            const response = await axios.put(`http://localhost:3001/${userId}`, updatedUser);
             setUser(response.data);
             setUserName(response.data.username);
             setUserEmail(response.data.email);
@@ -192,9 +192,9 @@ const UserProfile: React.FC = () => {
                 <div className={styles.modalOverlay} onClick={handleClosePostsModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <h2 className={styles.modalTitle}>My Posts</h2>
-                        <div className={styles.modalBody}>
+                        <div className={styles.postsGrid}>
                             {userPosts.map((post) => (
-                                <div key={post._id} className={styles.post}>
+                                <div key={post._id} className={styles.postItem}>
                                     <img src={post.image || "./Images/sample.png"} alt="Post" className={styles.postImage} />
                                     <div className={styles.postActions}>
                                         <span>{post.likesCount} ❤</span>
