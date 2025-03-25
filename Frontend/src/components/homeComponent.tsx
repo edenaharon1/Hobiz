@@ -61,7 +61,7 @@ const HomeComponents: React.FC<HomeComponentsProps> = ({
             {/* Modern Posts Grid */}
             <div className={styles.postsContainer}>
                 {posts.map((post) => (
-                    <div key={post._id} className={styles.post} onClick={() => handlePostClick(post)}>
+                     <div key={post._id} className={styles.post} onClick={() => handlePostClick(post)}>
                         <img
                             src={post.image || "./Images/sample.png"}
                             alt="Post"

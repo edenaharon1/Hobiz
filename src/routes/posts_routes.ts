@@ -163,11 +163,11 @@ router.post("/", authMiddleware, async (req, res) => {
 router.delete("/:id", authMiddleware, postsController.deleteItem.bind(postsController));
 
 router.put("/:id/like", authMiddleware, (req, res, next) => {
-    console.log("Received PUT request for /posts/:id/like");
-    console.log("Request params:", req.params);
-    console.log("Request user:", req.user);
-    postsController.likePost(req, res).catch(next);
-  });
+  console.log("Received PUT request for /posts/:id/like");
+  console.log("Request params:", req.params);
+  console.log("Request user:", req.user);
+  postsController.likePost(req, res).then(()=>next()).catch(next);
+});
 
   router.put("/:id", authMiddleware, postsController.update.bind(postsController))
 

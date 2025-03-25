@@ -38,7 +38,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // טיפול בבקשות OPTIONS עבור /posts
 app.options('/posts', cors());
-app.use("/file", filerouter);
+app.use("/files", filerouter);
 // הוספת נתיב בסיסי
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to my API!');
@@ -48,7 +48,7 @@ app.get('/', (req: Request, res: Response) => {
 app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
 app.use("/auth", authRoutes);
-app.use("/file", filerouter); 
+app.use("/files", filerouter); 
 app.use("/", userRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")))
 
