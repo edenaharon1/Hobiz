@@ -84,7 +84,7 @@ const Home: React.FC = () => {
                 return;
             }
     
-            let imageUrl = undefined;
+            let imageUrl: string | undefined;
             if (postData.image) {
                 const formData = new FormData();
                 formData.append("file", postData.image);
@@ -99,14 +99,21 @@ const Home: React.FC = () => {
                 console.log("Uploaded Image URL:", imageUrl);
             }
     
+            const postToSend: {
+                title: string;
+                content: string;
+                owner: any;
+                image?: string | null; // Allow null if no image
+            } = {
+                title: postData.title,
+                content: postData.content,
+                owner: postData.owner,
+                image: imageUrl || null, // Send the imageUrl if available, otherwise null
+            };
+    
             const response = await axios.post(
                 "http://localhost:3001/posts",
-                {
-                    title: postData.title,
-                    content: postData.content,
-                    owner: postData.owner,
-                    image: imageUrl,
-                },
+                postToSend,
                 {
                     headers: {
                         "Content-Type": "application/json",
@@ -281,6 +288,7 @@ const Home: React.FC = () => {
                 handleAddComment={handleAddComment}
                 setIsModalOpen={setIsModalOpen}
                 handleCreatePost={handleCreatePost}
+               
                 
             />
             {/* כפתור יצירת פוסט */}
@@ -288,6 +296,7 @@ const Home: React.FC = () => {
                 +
             </button>
         </div>
+       
 
         
     );

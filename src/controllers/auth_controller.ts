@@ -74,6 +74,10 @@ const login = async (req: Request, res: Response) => {
             res.status(400).send('wrong username or password');
             return;
         }
+        if (!user.password) {
+            res.status(400).send('wrong username or password');
+            return;
+        }
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) {
             res.status(400).send('wrong username or password');

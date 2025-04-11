@@ -170,5 +170,6 @@ router.put("/:id/like", authMiddleware, (req, res, next) => {
 });
 
   router.put("/:id", authMiddleware, postsController.update.bind(postsController))
+  
 
 export default router;
