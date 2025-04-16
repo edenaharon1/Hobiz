@@ -6,6 +6,61 @@ import { Document } from 'mongoose';
 import { OAuth2Client } from 'google-auth-library'; // ייבוא ספריית האוטנטיקציה של גוגל
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); // אתחול לקוח OAuth2
 
+const googleSignUp = async (req: Request, res: Response) => {
+    console.log('googleSignUp function called');
+    try {
+        const { token } = req.body;
+
+        if (!process.env.GOOGLE_CLIENT_ID) {
+            return res.status(500).send('שגיאת שרת: GOOGLE_CLIENT_ID לא הוגדר');
+        }
+
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        if (!payload) {
+            return res.status(400).send('ID token לא תקין של גוגל');
+        }
+
+        const { email, name } = payload;
+
+        // בדוק אם משתמש עם האימייל הזה כבר קיים
+        let existingUser = await userModel.findOne({ email });
+        if (existingUser) {
+            return res.status(409).send('משתמש עם האימייל הזה כבר קיים'); // Conflict
+        }
+
+        // צור משתמש חדש
+        const randomPassword = Math.random().toString(36).slice(-8);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
+        const newUser = await userModel.create({
+            email,
+            username: name,
+            password: hashedPassword,
+        });
+
+        const tokens = generateToken(newUser._id.toString());
+        if (!tokens) {
+            return res.status(500).send('שגיאת שרת: הנפקת טוקנים נכשלה');
+        }
+
+        res.status(200).json({
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            _id: newUser._id,
+        });
+
+    } catch (error) {
+        console.error('שגיאה ברישום עם גוגל:', error);
+        res.status(400).send('רישום עם גוגל נכשל');
+    }
+};
+
 const googleLogin = async (req: Request, res: Response) => {
     console.log('googleLogin function called');
     try {
@@ -300,4 +355,5 @@ export default {
     refresh: refresh as (req: Request, res: Response) => Promise<void>,
     logout: logout as (req: Request, res: Response) => Promise<void>,
     googleLogin: googleLogin as (req: Request, res: Response) => Promise<void>,
+    googleSignUp: googleSignUp as (req: Request, res: Response) => Promise<void>,
 };
