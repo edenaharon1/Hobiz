@@ -3,6 +3,63 @@ import userModel, { IUser } from '../models/user_model';
 import bcrypt from 'bcrypt';
 import jwt, { Secret } from 'jsonwebtoken';
 import { Document } from 'mongoose';
+import { OAuth2Client } from 'google-auth-library'; // ייבוא ספריית האוטנטיקציה של גוגל
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID); // אתחול לקוח OAuth2
+
+const googleLogin = async (req: Request, res: Response) => {
+    console.log('googleLogin function called');
+    try {
+        const { token } = req.body; // קבלת ה-ID token מהבקשה
+
+        if (!process.env.GOOGLE_CLIENT_ID) {
+            return res.status(500).send('שגיאת שרת: GOOGLE_CLIENT_ID לא הוגדר');
+        }
+
+        const ticket = await client.verifyIdToken({ // אימות ה-ID token מול גוגל
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        if (!payload) {
+            return res.status(400).send('ID token לא תקין של גוגל');
+        }
+
+        const { email, name } = payload; // חילוץ פרטי המשתמש
+
+        let user = await userModel.findOne({ email }); // בדיקה אם משתמש קיים כבר
+
+        if (!user) { // אם המשתמש לא קיים, צור משתמש חדש
+            // צור סיסמה רנדומלית (או שתחליט לא לאפשר התחברות עם סיסמה)
+            const randomPassword = Math.random().toString(36).slice(-8);
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
+            user = await userModel.create({
+                email,
+                username: name,
+                password: hashedPassword, // שמור את הסיסמה הרנדומלית
+                // ... שדות נוספים אם יש
+            });
+        }
+
+        // הנפקת טוקנים (accessToken ו-refreshToken)
+        const tokens = generateToken(user._id.toString());
+        if (!tokens) {
+            return res.status(500).send('שגיאת שרת: הנפקת טוקנים נכשלה');
+        }
+
+        res.status(200).json({
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+            _id: user._id,
+        });
+
+    } catch (error) {
+        console.error('שגיאה בהתחברות עם גוגל:', error);
+        res.status(400).send('התחברות עם גוגל נכשלה');
+    }
+};
 
 const generateToken = (userId: string): { accessToken: string; refreshToken: string } | null => {
     if (!process.env.TOKEN_SECRET || !process.env.TOKEN_EXPIRES || !process.env.REFRESH_TOKEN_EXPIRES) {
@@ -242,5 +299,5 @@ export default {
     login: login as (req: Request, res: Response) => Promise<void>,
     refresh: refresh as (req: Request, res: Response) => Promise<void>,
     logout: logout as (req: Request, res: Response) => Promise<void>,
-
+    googleLogin: googleLogin as (req: Request, res: Response) => Promise<void>,
 };

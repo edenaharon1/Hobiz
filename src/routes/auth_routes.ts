@@ -168,5 +168,6 @@ router.post("/refresh", authController.refresh);
  */
 router.post("/logout", authController.logout);
 
+router.post("/google-login", authController.googleLogin);
 
 export default router;

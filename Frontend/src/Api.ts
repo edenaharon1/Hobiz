@@ -114,5 +114,28 @@ async function deletePost(postId: string): Promise<boolean> {
     }
 }
 
-export { fetchPosts, addPost, updatePost, deletePost };
+async function loginWithGoogle(token: string): Promise<{ accessToken: string; refreshToken: string; _id: string } | null> {
+    try {
+        const response = await fetch(`${API_URL}/auth/google-login`, { // צור נתיב חדש ללוגין עם גוגל
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Google login failed! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error logging in with Google:", error);
+        return null;
+    }
+}
+
+export { fetchPosts, addPost, updatePost, deletePost, loginWithGoogle }; // הוסף את הפונקציה החדשה לייצוא
+
 export type { Post };
