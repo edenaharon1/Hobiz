@@ -140,6 +140,7 @@ const UserProfile: React.FC = () => {
         setUserPosts(userPosts.map(post => post._id === updatedPost._id ? updatedPost : post));
         setEditPost(null);
     };
+    
 
     const handleEditProfile = () => {
         setIsEditProfileModalOpen(true);

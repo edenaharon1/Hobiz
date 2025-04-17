@@ -69,6 +69,8 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
                 headers: requestHeaders,
             });
 
+            console.log("Post updated:", response.data);
+            
             onPostUpdated(response.data);
             onClose();
         } catch (error) {

@@ -108,8 +108,10 @@ class PostsController extends BaseController<IPost> {
     }
 
 async update(req: Request, res: Response): Promise<void> {
-    console.log("req.body:", req.body); // הוסף לוג כאן
-    console.log("req.user in update (start):", req.user);
+    console.log("--- Starting update function ---");
+    console.log("req.params:", req.params);
+    console.log("req.body (before multer):", req.body);
+    console.log("req.file (before check):", req.file)
 
     try {
         const postId = req.params.id;
@@ -134,8 +136,9 @@ async update(req: Request, res: Response): Promise<void> {
         }
 
         const { title, content } = req.body;
-        const image = req.file ? `/uploads/${req.file.filename}` : undefined;
+        const image = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`: undefined;
 
+        console.log("Image path after multer:", image);
         console.log("Title from request:", title);
         console.log("Content from request:", content);
         console.log("Image from request:", image);
