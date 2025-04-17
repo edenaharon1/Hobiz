@@ -15,6 +15,7 @@ interface Post {
     comments?: string[];
     createdAt?: string;
     updatedAt?: string;
+    commentsCount?: number;
 }
 
 async function fetchPosts(): Promise<Post[] | null> {

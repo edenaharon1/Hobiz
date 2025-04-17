@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
+import { FaComment } from 'react-icons/fa';
 import CreatePostModal from '../CreatePostModal';
 import { Post } from "../Api"
 import Logo from "../Images/logo (2).png";
@@ -20,6 +21,7 @@ interface HomeComponentsProps {
     handleAddComment: () => void;
     setIsModalOpen: (open: boolean) => void;
     handleCreatePost: (postData: { owner: any; title: string; content: string; image?: File }) => void;
+    commentsCount?: number;
 }
 
 const HomeComponents: React.FC<HomeComponentsProps> = ({
@@ -69,7 +71,7 @@ const HomeComponents: React.FC<HomeComponentsProps> = ({
                         />
                         <div className={styles.postActions}>
                             <span>❤ {post.likesCount}</span>
-                            <span> {post.comments?.length || 0}</span>
+                            <span> <FaComment /> {post.commentsCount !== undefined ? post.commentsCount : post.comments?.length || 0}</span>
                         </div>
                     </div>
                 ))}

@@ -4,6 +4,7 @@ import { fetchPosts, Post } from "./Api";
 import axios from "axios";
 import HomeComponents from './components/homeComponent';
 import styles from './components/Home.module.css'; // ייבוא סגנונות
+import { FaComment } from 'react-icons/fa'; // ייבוא אייקון התגובה (התקן את הספריה אם לא מותקנת: npm install react-icons)
 
 const Home: React.FC = () => {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -63,6 +64,7 @@ const Home: React.FC = () => {
                     likesCount: post.likesCount || 0,
                     likedBy: post.likedBy || [],
                     comments: post.comments || [],
+                    commentsCount: post.commentsCount, // שמירה של commentsCount אם קיים
                 }));
                 setPosts(processedPosts as Post[]);
             }
@@ -183,26 +185,27 @@ const Home: React.FC = () => {
 
                 const response = await axios.post(
                     "http://localhost:3001/comments",
-                    {
-                        comment: newComment,
-                        postId: selectedPost._id,
-                        owner: localStorage.getItem("userId"),
-                    },
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${authToken}`,
-                        },
-                    }
+                    { comment: newComment, postId: selectedPost._id, owner: localStorage.getItem("userId") },
+                    { headers: { "Content-Type": "application/json", Authorization: `Bearer ${authToken}` } }
                 );
 
-                setSelectedPost({
-                    ...selectedPost,
-                    comments: [
-                        ...(selectedPost.comments || []),
-                        response.data,
-                    ],
-                });
+                const newCommentData = response.data;
+
+                // עדכון הפוסט הנבחר עם התגובה החדשה
+                setSelectedPost((prevSelectedPost) =>
+                    prevSelectedPost
+                        ? { ...prevSelectedPost, comments: [...(prevSelectedPost.comments || []), newCommentData] }
+                        : null
+                );
+
+                // עדכון רשימת הפוסטים כדי לעדכן את ספירת התגובות
+                setPosts((prevPosts) =>
+                    prevPosts.map((post) =>
+                        post._id === selectedPost._id
+                            ? { ...post, commentsCount: (post.commentsCount || 0) + 1 }
+                            : post
+                    )
+                );
 
                 setNewComment("");
             } catch (error) {
