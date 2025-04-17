@@ -25,6 +25,9 @@
   flex-direction: column;
   box-shadow: var(--card-shadow);
   backdrop-filter: blur(4px); /* Modern backdrop blur */
+  max-height: 80vh; /* Max height for modal content */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  box-sizing: border-box; /* Ensure padding doesn't affect layout */
 }
 
 /* Modal title */
@@ -49,8 +52,9 @@
 
 /* Textarea specific styling */
 .modalContent textarea {
-  height: 150px;
   resize: vertical; /* Allow resizing */
+  min-height: 50px; /* Minimum height for the textarea */
+  overflow-y: hidden; /* Hide the overflow vertically */
 }
 
 /* Button styles */

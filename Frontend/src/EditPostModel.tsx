@@ -22,13 +22,13 @@ interface EditPostModalProps {
 const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpdated }) => {
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
-    const [image, setImage] = useState<string | File>(post.image || "");
+    const [image, setImage] = useState<string | File>(post.image || ""); // אם יש תמונה קיימת
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setImage(e.target.files[0]);
+            setImage(e.target.files[0]); // אם נבחרה תמונה חדשה, נעדכן את ה-state
         } else {
-            setImage(post.image || "");
+            setImage(post.image || ""); // אם לא נבחרה תמונה חדשה, נשאיר את התמונה הקיימת
         }
     };
 
@@ -40,14 +40,12 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
                 return;
             }
 
-            console.log("Post ID:", post._id);
-            console.log("Auth Token:", token);
-
             let requestData: FormData | { title: string; content: string; image?: string };
             const requestHeaders: HeadersInit = {
                 Authorization: `Bearer ${token}`,
             };
 
+            // אם יש תמונה חדשה (File), נשלח אותה כ-FormData
             if (image instanceof File) {
                 const formData = new FormData();
                 formData.append('title', title);
@@ -56,11 +54,11 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
                 requestData = formData;
                 requestHeaders['Content-Type'] = 'multipart/form-data';
             } else {
+                // אם לא נבחרה תמונה חדשה, נשלח את המידע כ-json
                 requestData = {
                     title: title,
                     content: content,
-                    // אם לא נבחרה תמונה חדשה, אל תשלח את השדה 'image' כדי לא לדרוס את התמונה הקיימת
-                    ...(typeof image === 'string' && image ? { image } : {}),
+                    ...(typeof image === 'string' && image ? { image } : {}), // אם יש תמונה קיימת, נשלח אותה
                 };
                 requestHeaders['Content-Type'] = 'application/json';
             }
@@ -71,6 +69,7 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
 
             console.log("Post updated:", response.data);
             
+            // קוראים לפונקציה שעוברת את הפוסט המעודכן
             onPostUpdated(response.data);
             onClose();
         } catch (error) {
@@ -90,14 +89,35 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                 <h2 className={styles.modalTitle}>Edit Post</h2>
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title" />
-                <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Content" />
+                <input 
+                    type="text" 
+                    value={title} 
+                    onChange={(e) => setTitle(e.target.value)} 
+                    placeholder="Title" 
+                />
+                <textarea 
+                    value={content} 
+                    onChange={(e) => setContent(e.target.value)} 
+                    placeholder="Content" 
+                />
                 <div>
                     <label htmlFor="imageInput">Choose new image:</label>
-                    <input type="file" id="imageInput" onChange={handleImageChange} accept="image/*" />
+                    <input 
+                        type="file" 
+                        id="imageInput" 
+                        onChange={handleImageChange} 
+                        accept="image/*" 
+                    />
+                    
+                    {/* אם יש תמונה קיימת, הצג את שם הקובץ או את התמונה הנוכחית */}
                     {post.image && typeof post.image === 'string' && !(image instanceof File) && (
-                        <p>Current Image: {post.image}</p>
+                        <div>
+                            <p>Current Image:</p>
+                            <img src={post.image} alt="Current Post" className={styles.imagePreview} />
+                        </div>
                     )}
+
+                    {/* אם נבחרה תמונה חדשה */}
                     {image instanceof File && (
                         <p>Selected Image: {image.name}</p>
                     )}

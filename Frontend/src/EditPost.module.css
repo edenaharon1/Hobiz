@@ -25,6 +25,9 @@
     flex-direction: column;
     box-shadow: var(--card-shadow);
     backdrop-filter: blur(4px); /* Modern backdrop blur */
+    max-height: 80vh; /* Max height for modal content */
+    overflow-y: auto; /* Enable vertical scrolling when content overflows */
+    box-sizing: border-box; /* Ensure padding doesn't affect layout */
 }
 
 /* Modal title */
@@ -49,19 +52,20 @@
 
 /* Textarea specific styling */
 .modalContent textarea {
-    height: 150px;
-    resize: vertical; /* Allow resizing */
+    resize: none; /* Disable resizing */
+    min-height: 50px; /* Min height to start with */
+    overflow-y: hidden; /* Hide the overflow */
 }
 
-/* Container for the action buttons */
+/* Modal actions container */
 .modalActions {
     display: flex;
-    justify-content: space-between; /* Distribute space between buttons */
+    justify-content: space-between; /* Adjust as needed */
     margin-top: 20px;
 }
 
-/* Styles for the Save button */
-.saveButton {
+/* Button styles */
+.modalActions button:first-child { /* Save button */
     background-color: var(--primary-color); /* Using CSS variable */
     color: white;
     font-weight: 600;
@@ -70,16 +74,16 @@
     border-radius: var(--border-radius-md);
     cursor: pointer;
     transition: var(--transition-fast);
-    flex-grow: 1; /* Allow button to grow and take available space */
-    margin-right: 5px; /* Add some spacing to the right of the Save button */
+    flex-grow: 1;
+    margin-right: 5px;
 }
 
-.saveButton:hover {
+.modalActions button:first-child:hover {
     background-color: var(--primary-dark); /* Darker shade on hover */
 }
 
-/* Styles for the Cancel button */
-.closeButton {
+/* Close button styles */
+.modalActions button:last-child { /* Cancel button */
     background-color: #fffafa; /* Using CSS variable for close button */
     color: #333;
     border: 1px solid #ccc;
@@ -87,11 +91,11 @@
     border-radius: var(--border-radius-md);
     cursor: pointer;
     transition: var(--transition-fast);
-    flex-grow: 1; /* Allow button to grow and take available space */
-    margin-left: 5px; /* Add some spacing to the left of the Cancel button */
+    flex-grow: 1;
+    margin-left: 5px;
 }
 
-.closeButton:hover {
+.modalActions button:last-child:hover {
     background-color: rgba(255, 255, 255, 0.5);
 }
 
