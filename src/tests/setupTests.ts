@@ -11,6 +11,15 @@ beforeAll(async () => {
     console.log("Global beforeAll");
     app = await initApp();
 
+    // יצירת משתמש חדש
+    await request(app)
+        .post("/auth/register")  // נוודא שהנתיב הזה קיים אצלך
+        .send({
+            email: "test@user.com",
+            password: "testpassword",
+        });
+
+    // עכשיו תעשה את ה־login
     const loginResponse = await request(app)
         .post("/auth/login")
         .send({

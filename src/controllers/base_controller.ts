@@ -56,8 +56,6 @@ class BaseController<T> {
             res.status(400).send(error);
         }
     };
-
 }
 
-
-export default BaseController
+export default BaseController;

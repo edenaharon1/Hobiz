@@ -81,4 +81,4 @@ router.put('/users/image/:userId', authMiddleware, upload.single("profileImage")
     }
 });
 
-export = router;
+export default router;

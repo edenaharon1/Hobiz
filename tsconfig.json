@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
@@ -9,7 +8,14 @@
     "outDir": "dist",
     "strict": true,
     "resolveJsonModule": true,
-    "lib": ["es2015", "dom", "esnext"],
-    
-  }
+    "lib": ["es2015", "dom", "esnext"]
+  },
+  "include": [
+    "src/**/*.ts",   // כל קבצי ה-backend שלך
+    "tests/**/*.ts"  // גם הטסטים (אם הם בתיקיית tests)
+  ],
+  "exclude": [
+    "Frontend",       // אם יש תיקיית frontend, תוכל להוציא אותה מההידור
+    "node_modules"    // לא להכליל את תיקיית node_modules
+  ]
 }
