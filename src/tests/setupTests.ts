@@ -5,7 +5,7 @@ import { Express } from "express";
 import { expect, beforeAll, afterAll } from '@jest/globals'; // ייבוא נכון
 
 let app: Express;
-export let testUser: { token: string; _id: string };
+export let testUser: { token: string; _id: string  };
 
 beforeAll(async () => {
     console.log("Global beforeAll");

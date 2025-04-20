@@ -227,91 +227,104 @@ type tUser = Document<unknown, {}, IUser> &
     }> & {
         __v: number;
     };
-const verifyRefreshToken = (refreshToken: string | undefined) => {
-    return new Promise<tUser>((resolve, reject) => {
-        //get refresh token from body
-        if (!refreshToken) {
-            reject('fail');
-            return;
-        }
-        //verify token
-        if (!process.env.TOKEN_SECRET) {
-            reject('fail');
-            return;
-        }
-        jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
-            if (err) {
-                reject('fail');
-                return;
+
+    
+    const verifyRefreshToken = (refreshToken: string | undefined) => {
+        return new Promise<tUser>(async (resolve, reject) => {
+            console.log("🔑 בודק refreshToken:", refreshToken); // הוסף לוג כאן
+            if (!refreshToken || !process.env.TOKEN_SECRET) {
+                console.log("🔒 refreshToken חסר או TOKEN_SECRET לא הוגדר");
+                return reject('fail');
             }
-            //get the user id fromn token
-            const userId = payload._id;
-            try {
-                //get the user form the db
-                const user = await userModel.findById(userId);
-                if (!user) {
-                    reject('fail');
-                    return;
+    
+            jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
+                if (err) {
+                    console.log("❌ אימות טוקן נכשל:", err);
+                    return reject('fail');
                 }
-                if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
-                    user.refreshToken =[];
+    
+                const userId = payload._id;
+                console.log("✅ טוקן תקין, מזהה משתמש:", userId);
+    
+                try {
+                    const user = await userModel.findById(userId);
+                    if (!user) {
+                        console.log("❌ לא נמצא משתמש לפי ה-ID");
+                        return reject('fail');
+                    }
+    
+                    console.log("👤 משתמש שנמצא:", user); // הוסף לוג כאן
+                    console.log("currentToken לצורך השוואה:", refreshToken); // הוסף לוג כאן
+                    console.log("refreshToken של המשתמש:", user.refreshToken); // הוסף לוג כאן
+    
+                    if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
+                        console.log("🚫 הטוקן לא נמצא ברשימת הטוקנים של המשתמש");
+                        user.refreshToken = [];
+                        await user.save();
+                        return reject('fail');
+                    }
+    
+                    console.log("📌 לפני מחיקת הטוקן:", user.refreshToken);
+                    user.refreshToken = user.refreshToken.filter(token => token !== refreshToken);
                     await user.save();
-                    reject('fail');
-                    return;
+                    console.log("✅ אחרי מחיקת הטוקן:", user.refreshToken);
+    
+                    const updatedUser = await userModel.findById(userId);
+                    if (!updatedUser) {
+                        console.log("❌ שגיאה בטעינה מחודשת של המשתמש");
+                        return reject('fail');
+                    }
+    
+                    console.log("🎯 מחזיר את המשתמש המאומת");
+                    resolve({
+                        ...updatedUser.toObject(),
+                        _id: updatedUser._id.toString(),
+                    } as tUser);
+                } catch (err) {
+                    console.log("❌ שגיאה כללית:", err);
+                    return reject('fail');
                 }
-                const tokens = user.refreshToken!.filter((token) => token !== refreshToken);
-                user.refreshToken = tokens;
-
-                resolve({
-                    ...user.toObject(),
-                    _id: user._id.toString(),
-                } as tUser);
-            } catch (err) {
-                reject('fail');
-                return;
-            }
+            });
         });
-    });
-};
+    };
+    
 
-const logout = async (req: Request, res: Response) => {
-    try {
-        const user = await verifyRefreshToken(req.body.refreshToken);
-        await user.save();
-        res.status(200).send('success');
-    } catch (err) {
-        res.status(400).send('fail');
-    }
-};
-
-const refresh = async (req: Request, res: Response) => {
-    try {
-        const user = await verifyRefreshToken(req.body.refreshToken);
-        if (!user) {
+    const logout = async (req: Request, res: Response) => {
+        try {
+            await verifyRefreshToken(req.body.refreshToken);
+            res.status(200).send('success');
+        } catch (err) {
             res.status(400).send('fail');
-            return;
         }
-        const tokens = generateToken(user._id);
+    };
 
-        if (!tokens) {
-            res.status(500).send('Server Error');
-            return;
+
+    const refresh = async (req: Request, res: Response) => {
+        try {
+            const user = await verifyRefreshToken(req.body.refreshToken);
+            if (!user) {
+                return res.status(400).send({ error: 'Refresh failed - invalid token' });
+            }
+            const tokens = generateToken(user._id);
+    
+            if (!tokens) {
+                return res.status(500).send({ error: 'Server Error - token generation failed' });
+            }
+            if (!user.refreshToken) {
+                user.refreshToken =[];
+            }
+            user.refreshToken.push(tokens.refreshToken);
+            await user.save();
+            res.status(200).send({
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
+                _id: user._id,
+            });
+            //send new token
+        } catch (err) {
+            res.status(400).send({ error: 'Refresh failed - exception' });
         }
-        if (!user.refreshToken) {
-            user.refreshToken =[];
-        }
-        user.refreshToken.push(tokens.refreshToken);
-        await user.save();
-        res.status(200).send({
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-            _id: user._id,
-        });
-        //send new token
-    } catch (err) {
-        res.status(400).send('fail');
-    }
-};
+    };
 
 type Payload = {
     _id: string;
