@@ -140,6 +140,7 @@ const UserProfile: React.FC = () => {
         setUserPosts(userPosts.map(post => post._id === updatedPost._id ? updatedPost : post));
         setEditPost(null);
     };
+    
 
     const handleEditProfile = () => {
         setIsEditProfileModalOpen(true);
@@ -148,11 +149,22 @@ const UserProfile: React.FC = () => {
     const handleSaveProfile = async (updatedUser: any) => {
         try {
             const userId = localStorage.getItem("userId");
+            const authToken = localStorage.getItem("authToken"); // קבל את הטוקן
+    
             if (!userId) {
                 console.error("User ID not found");
                 return;
             }
-            const response = await axios.put(`http://localhost:3001/${userId}`, updatedUser);
+            if (!authToken) {
+                console.error("Auth Token not found");
+                return;
+            }
+    
+            const response = await axios.put(`http://localhost:3001/${userId}`, updatedUser, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`, // הוסף את ההדר Authorization
+                },
+            });
             setUser(response.data);
             setUserName(response.data.username);
             setUserEmail(response.data.email);
@@ -174,8 +186,12 @@ const UserProfile: React.FC = () => {
 
             <div className={styles.profileCard}>
                 <div className={styles.userInfo}>
-                    <div className={styles.profileImageContainer}>
-                        <img src={userImage} alt="User Profile" className={styles.profileImage} />
+                <div className={styles.profileImageContainer}>
+                    <img
+                         src={user?.image ? `http://localhost:3001/uploads/${user.image}` : userImage}
+                         alt="User Profile"
+                         className={styles.profileImage}
+                        />
                     </div>
                     <div className={styles.userDetails}>
                         <p className={styles.userDetail}>Name: {userName}</p>

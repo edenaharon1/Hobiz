@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 import postsController from "../controllers/post_controller";
 import { authMiddleware } from "../controllers/auth_controller";
+import { upload } from "../middleware/multer.middleware";
 
 
 /**
@@ -169,6 +170,8 @@ router.put("/:id/like", authMiddleware, (req, res, next) => {
   postsController.likePost(req, res).then(()=>next()).catch(next);
 });
 
-  router.put("/:id", authMiddleware, postsController.update.bind(postsController))
+router.put("/:id", authMiddleware, upload.single("image"), postsController.update.bind(postsController));
+
+  
 
 export default router;

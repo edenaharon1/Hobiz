@@ -1,31 +1,35 @@
 import mongoose from "mongoose";
 
 export interface IUser {
-  username: string;
-  email: string;
-  password: string;
-  image?: string; // הוספת שדה image
-  refreshToken?: string[];
+    username?: string; // סימן שאלה (?) מציין שזה אופציונלי ב-TypeScript
+    email: string;
+    password: string;
+    image?: string;
+    refreshToken?: string[];
 }
 
 const userSchema = new mongoose.Schema<IUser>({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  image: { // הוספת שדה image
-    type: String,
-    default: null,
-  },
-  refreshToken: {
-    type: [String],
-    default: [],
-  }
+    username: {
+        type: String,
+        unique: false, // שמור על הייחודיות כ-false אם זה מה שאתה רוצה
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    image: {
+        type: String,
+        default: null,
+    },
+    refreshToken: {
+        type: [String],
+        default: [],
+    }
 });
 
 const userModel = mongoose.model<IUser>("Users", userSchema);

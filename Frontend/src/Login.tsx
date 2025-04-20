@@ -22,7 +22,7 @@ const Login: React.FC = () => {
         console.log(import.meta.env.VITE_TEST_ENV);
         try {
             console.log("mishtane:",);
-            const response = await axios.post(`http://localhost:3001/auth/login`, {
+            const response = await axios.post(`http://localhost:3001/auth/google-login`, {
                 token: credentialResponse.credential,
             });
     

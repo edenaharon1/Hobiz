@@ -1,7 +1,15 @@
 import request from "supertest";
 import { app, testUser } from "./setupTests";
+import postModel from "../models/post_model";
+import commentModel from "../models/comments_model";
+import mongoose from "mongoose";
 
 let postId = "";
+
+beforeAll(async () => {
+    await postModel.deleteMany({});
+    await commentModel.deleteMany({});
+  });
 
 describe("Posts Tests", () => {
     test("Posts test get all", async () => {

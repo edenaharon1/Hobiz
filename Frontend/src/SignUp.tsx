@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import styles from './Login.module.css';
+import styles from './Login.module.css'; // משתמש באותם סטיילים
 import logo from './Images/logo (2).png';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { GoogleLogin } from '@react-oauth/google';
 
 const SignUp: React.FC = () => {
     const [fullName, setFullName] = useState("");
@@ -19,10 +20,31 @@ const SignUp: React.FC = () => {
                 password: password
             });
             console.log("Sign Up Successful:", response.data);
-            navigate('/home'); // מעבר לדף ההתחברות (Login)
+            navigate('/home'); // או לדף אחר שתבחר
         } catch (error) {
             console.error("Sign Up Failed:", error);
         }
+    };
+
+    const handleGoogleSignUpSuccess = async (credentialResponse: any) => {
+        const credential = credentialResponse?.credential;
+        if (credential) {
+            try {
+                const response = await axios.post('http://localhost:3001/auth/google-signup', { // נתיב חדש ל-Google Sign Up
+                    token: credential,
+                });
+                console.log("Google Sign Up Successful:", response.data);
+                localStorage.setItem('authToken', response.data.accessToken);
+                localStorage.setItem('refreshToken', response.data.refreshToken);
+                navigate('/home');
+            } catch (error: any) {
+                console.error("Google Sign Up Error:", error.response?.data || error.message);
+            }
+        }
+    };
+
+    const handleGoogleSignUpFailure = () => {
+        console.error("Google Sign Up Failed");
     };
 
     return (
@@ -77,6 +99,13 @@ const SignUp: React.FC = () => {
                         Sign Up
                     </button>
                 </form>
+
+                <div className={styles.googleButtonContainer}>
+                    <GoogleLogin
+                        onSuccess={handleGoogleSignUpSuccess}
+                        onError={handleGoogleSignUpFailure}
+                    />
+                </div>
             </div>
 
             <button className={styles.signupButton}>

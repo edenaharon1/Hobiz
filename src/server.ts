@@ -23,6 +23,8 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   exposedHeaders: ["accessToken", "refreshToken"],
 }));
+app.use(express.json()); 
+app.use("/auth", authRoutes);
 app.use((req, res, next) => {
   console.log(`${req.method} request for ${req.url}`);
   console.log("Headers:", req.headers);
@@ -38,7 +40,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // טיפול בבקשות OPTIONS עבור /posts
 app.options('/posts', cors());
-app.use("/files", filerouter);
 // הוספת נתיב בסיסי
 app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to my API!');
@@ -47,7 +48,6 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use("/posts", postsRoute);
 app.use("/comments", commentsRoute);
-app.use("/auth", authRoutes);
 app.use("/files", filerouter); 
 app.use("/", userRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")))

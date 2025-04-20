@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import styles from './EditProfilemodal.module.css';
+import styles from './EditProfileModal.module.css';
 
 interface EditProfileModalProps {
     isOpen: boolean;
@@ -11,86 +11,109 @@ interface EditProfileModalProps {
 const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose, user, onSave }) => {
     const [username, setUsername] = useState(user?.username || '');
     const [email, setEmail] = useState(user?.email || '');
-    const [image, setImage] = useState<File | null>(null);
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(user?.image || null);
+    const userId = localStorage.getItem('userId'); // קבלת ID המשתמש מה-localStorage
+    const authToken = localStorage.getItem('authToken'); // קבלת הטוקן
 
     useEffect(() => {
         setUsername(user?.username || '');
         setEmail(user?.email || '');
         setImagePreview(user?.image || null);
+        setImageFile(null); // איפוס קובץ התמונה בעת פתיחת המודל
     }, [user]);
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const selectedImage = e.target.files[0];
-            setImage(selectedImage);
+            setImageFile(selectedImage);
             setImagePreview(URL.createObjectURL(selectedImage));
         }
     };
 
     const handleSave = async () => {
         console.log('handleSave called');
-        try {
-            let imageUrl = imagePreview;
-            if (image) {
-                imageUrl = await uploadImage(image);
+        if (!userId || !authToken) {
+            console.error('User ID or Auth Token not found');
+            return;
+        }
+        console.log('User ID:', userId);
+        console.log('Auth Token:', authToken);
+
+        let newImageUrl: string | null = null;
+
+        if (imageFile) {
+            const formData = new FormData();
+            formData.append('profileImage', imageFile);
+
+            try {
+                console.log('Attempting to upload image...');
+                const imageResponse = await fetch(`http://localhost:3001/image/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                    },
+                    body: formData,
+                });
+
+                console.log('Image upload response:', imageResponse);
+
+                if (!imageResponse.ok) {
+                    const errorData = await imageResponse.json();
+                    throw new Error(`Failed to upload image: ${errorData?.message || imageResponse.statusText}`);
+                }
+
+                const imageData = await imageResponse.json();
+                console.log('Image upload data:', imageData);
+                newImageUrl = imageData?.user?.image;
+                console.log('Uploaded image URL:', newImageUrl);
+
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                // החלט כיצד לטפל בשגיאת העלאה (הצגת הודעה למשתמש וכו')
+                return; // עצור את השמירה אם העלאת התמונה נכשלה
             }
-    
-            const updatedUser = {
-                username,
-                email,
-                image: imageUrl,
-            };
-    
-            console.log('updatedUser:', updatedUser);
-    
-            const response = await fetch(`http://localhost:3001/:id`, {
+        }
+
+        const updatedUser = {
+            username,
+            email,
+            image: newImageUrl || user?.image, // השתמש ב-URL החדש אם הועלה, אחרת השתמש בקיים
+        };
+
+        console.log('updatedUser:', updatedUser);
+
+        try {
+            console.log('Attempting to update user profile...');
+            console.log('Auth Token before update request:', authToken);
+            console.log('Headers before sending update request:', {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+            });
+            const profileResponse = await fetch(`http://localhost:3001/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`,
                 },
                 body: JSON.stringify(updatedUser),
             });
-    
-            console.log('response:', response);
-    
-            if (!response.ok) {
-                throw new Error('Failed to update user');
+
+            console.log('Profile update response:', profileResponse);
+
+            if (!profileResponse.ok) {
+                const errorData = await profileResponse.json();
+                throw new Error(`Failed to update user: ${errorData?.message || profileResponse.statusText}`);
             }
-    
-            const updatedUserData = await response.json();
-    
+
+            const updatedUserData = await profileResponse.json();
             console.log('responseData:', updatedUserData);
-    
             onSave(updatedUserData);
-    
             onClose();
+
         } catch (error) {
             console.error('Error updating user:', error);
             // הצגת הודעת שגיאה למשתמש
-        }
-    };
-    
-    // פונקציה לדוגמה להעלאת תמונה
-    const uploadImage = async (file: File): Promise<string> => {
-        const formData = new FormData();
-        formData.append('file', file);
-    
-        try {
-            const response = await fetch('http://localhost:3001/file', { // הנח ש-endpoint ההעלאה הוא /upload
-                method: 'POST',
-                body: formData,
-            });
-    
-            if (!response.ok) {
-                throw new Error('Failed to upload image');
-            }
-    
-            const data = await response.json();
-            return data.url; // החזרת URL של התמונה
-        } catch (error) {
-            console.error('Error uploading image:', error);
-            throw error; // זריקת שגיאה כדי שה-handleSave יוכל לטפל בה
         }
     };
 

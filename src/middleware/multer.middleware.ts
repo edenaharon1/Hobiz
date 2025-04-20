@@ -4,7 +4,7 @@ import path from 'path';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const uploadPath = path.join(__dirname, './uploads'); // נתיב לתיקיית העלאה
+        const uploadPath = path.join(__dirname, '../../uploads'); 
         console.log(`Multer: Setting destination to ${uploadPath}`);
         cb(null, uploadPath);
 

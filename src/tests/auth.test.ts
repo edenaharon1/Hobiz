@@ -129,17 +129,19 @@ describe("Auth Tests", () => {
     });
     expect(response.statusCode).toBe(200);
     const refreshTokenNew = response.body.refreshToken;
+    testUser.refreshToken = refreshTokenNew; // עדכון ה-refreshToken ב-testUser
 
     const response2 = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: testUser.refreshToken,
+      refreshToken: testUser.refreshToken, // שימוש ב-refreshToken החדש
     });
-    expect(response2.statusCode).not.toBe(200);
+    expect(response2.statusCode).not.toBe(200); // לא צפוי לחזור עם 200
 
     const response3 = await request(app).post(baseUrl + "/refresh").send({
-      refreshToken: refreshTokenNew,
+      refreshToken: refreshTokenNew, // שימוש חוזר ב-refreshToken החדש
     });
-    expect(response3.statusCode).not.toBe(200);
-  });
+    expect(response3.statusCode).toBe(401); // הפעם אמור לחזור עם 401
+});
+
 
   test("Test logout", async () => {
     const response = await request(app).post(baseUrl + "/login").send(testUser);
