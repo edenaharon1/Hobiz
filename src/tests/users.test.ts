@@ -5,29 +5,33 @@ import { Express } from "express";
 import userModel from "../models/user_model";
 import postModel from "../models/post_model";
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt';
 
 var app: Express;
 
 beforeAll(async () => {
     app = await initApp();
-    await userModel.deleteMany();
-    await postModel.deleteMany();
+    // ודא שהחיבור למסד הנתונים מוגדר ב-initApp
 });
 
-afterAll((done) => {
-    mongoose.connection.close();
-    done();
+afterAll(async () => {
+    await mongoose.disconnect();
+});
+
+beforeEach(async () => {
+    await userModel.deleteMany();
+    await postModel.deleteMany();
 });
 
 describe("User Controller Tests", () => {
     let testUser: any;
     let testPost: any;
-    let token: string;
+    let accessToken: string;
 
     beforeEach(async () => {
         testUser = await userModel.create({
             email: "test@user.com",
-            password: "testpassword",
+            password: await bcrypt.hash("testpassword", 10),
             username: "testuser",
         });
 
@@ -37,18 +41,13 @@ describe("User Controller Tests", () => {
             owner: testUser._id,
         });
 
-        token = jwt.sign({ _id: testUser._id }, process.env.TOKEN_SECRET || "secret");
-    });
-
-    afterEach(async () => {
-        await userModel.deleteMany();
-        await postModel.deleteMany();
+        accessToken = jwt.sign({ _id: testUser._id }, process.env.TOKEN_SECRET || "secret", { expiresIn: '1h' });
     });
 
     test("getUserProfile", async () => {
         const response = await request(app)
-            .get(`/users/${testUser._id}`)
-            .set("Authorization", `Bearer ${token}`);
+            .get(`/${testUser._id}`) // שינוי הנתיב ל-'/'
+            .set("Authorization", `Bearer ${accessToken}`);
 
         expect(response.statusCode).toBe(200);
         expect(response.body.user.email).toBe(testUser.email);
@@ -56,16 +55,70 @@ describe("User Controller Tests", () => {
     });
 
     test("updateUserProfile", async () => {
+        const updatedUsername = "updateduser";
+        const updatedImage = "updatedimage.jpg";
+
         const response = await request(app)
-            .put(`/users/${testUser._id}`)
-            .set("Authorization", `Bearer ${token}`)
+            .put(`/${testUser._id}`) // שינוי הנתיב ל-'/'
+            .set("Authorization", `Bearer ${accessToken}`)
             .send({
-                username: "updateduser",
-                profileImage: "updatedimage.jpg",
+                username: updatedUsername,
+                image: updatedImage,
             });
 
         expect(response.statusCode).toBe(200);
-        expect(response.body.username).toBe("updateduser");
-        expect(response.body.profileImage).toBe("updatedimage.jpg");
+        expect(response.body.username).toBe(updatedUsername);
+        expect(response.body.image).toBe(updatedImage);
+
+        const updatedUser = await userModel.findById(testUser._id);
+        expect(updatedUser?.username).toBe(updatedUsername);
+        expect(updatedUser?.image).toBe(updatedImage);
+    });
+
+    test("getUserPosts", async () => {
+        const response = await request(app)
+            .get(`/posts/user/${testUser._id}`) // הנתיב הזה נראה תקין בהתאם ל-user_routes
+            .set("Authorization", `Bearer ${accessToken}`);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body.length).toBe(1);
+        expect(response.body[0].title).toBe(testPost.title);
+    });
+
+    test("getUserProfile - User not found", async () => {
+        const nonExistentUserId = new mongoose.Types.ObjectId();
+        const response = await request(app)
+            .get(`/${nonExistentUserId}`) // שינוי הנתיב ל-'/'
+            .set("Authorization", `Bearer ${accessToken}`);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.text).toBe("User not found");
+    });
+
+    test("updateUserProfile - User not found", async () => {
+        const nonExistentUserId = new mongoose.Types.ObjectId();
+        const response = await request(app)
+            .put(`/${nonExistentUserId}`) // שינוי הנתיב ל-'/'
+            .set("Authorization", `Bearer ${accessToken}`)
+            .send({ username: "updateduser" });
+
+        expect(response.statusCode).toBe(404);
+        expect(response.text).toBe("User not found");
+    });
+
+    test("getUserPosts - Posts not found for user", async () => {
+        const anotherUser = await userModel.create({
+            email: "another@user.com",
+            password: await bcrypt.hash("password", 10),
+            username: "anotheruser",
+        });
+        const anotherAccessToken = jwt.sign({ _id: anotherUser._id }, process.env.TOKEN_SECRET || "secret", { expiresIn: '1h' });
+
+        const response = await request(app)
+            .get(`/posts/user/${anotherUser._id}`) // הנתיב הזה נראה תקין
+            .set("Authorization", `Bearer ${anotherAccessToken}`);
+
+        expect(response.statusCode).toBe(404);
+        expect(response.text).toBe("Posts not found for this user");
     });
 });
