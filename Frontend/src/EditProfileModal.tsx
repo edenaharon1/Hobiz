@@ -48,7 +48,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose, us
 
             try {
                 console.log('Attempting to upload image...');
-                const imageResponse = await fetch(`http://localhost:3001/image/${userId}`, {
+                const imageResponse = await fetch(`http://localhost:3001/users/image/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Authorization': `Bearer ${authToken}`,
@@ -90,7 +90,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose, us
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${authToken}`,
             });
-            const profileResponse = await fetch(`http://localhost:3001/${userId}`, {
+            const profileResponse = await fetch(`http://localhost:3001/users/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

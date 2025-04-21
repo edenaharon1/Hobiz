@@ -23,12 +23,16 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
     const [image, setImage] = useState<string | File>(post.image || ""); // אם יש תמונה קיימת
+    const [imagePreview, setImagePreview] = useState<string | null>(post.image || null); // תצוגה מקדימה של התמונה
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
-            setImage(e.target.files[0]); // אם נבחרה תמונה חדשה, נעדכן את ה-state
+            const selectedImage = e.target.files[0];
+            setImage(selectedImage); // אם נבחרה תמונה חדשה, נעדכן את ה-state
+            setImagePreview(URL.createObjectURL(selectedImage)); // יצירת URL לתצוגה מקדימה של התמונה
         } else {
             setImage(post.image || ""); // אם לא נבחרה תמונה חדשה, נשאיר את התמונה הקיימת
+            setImagePreview(post.image || null); // אם אין תמונה חדשה, נשאיר את התמונה הקיימת
         }
     };
 
@@ -117,9 +121,12 @@ const EditPostModal: React.FC<EditPostModalProps> = ({ post, onClose, onPostUpda
                         </div>
                     )}
 
-                    {/* אם נבחרה תמונה חדשה */}
-                    {image instanceof File && (
-                        <p>Selected Image: {image.name}</p>
+                    {/* אם נבחרה תמונה חדשה, הצג את תצוגת התמונה המקדימה */}
+                    {imagePreview && (
+                        <div>
+                            <p>Selected Image:</p>
+                            <img src={imagePreview} alt="Selected Post" className={styles.imagePreview} />
+                        </div>
                     )}
                 </div>
                 <div className={styles.modalActions}>

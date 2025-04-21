@@ -35,7 +35,7 @@ const UserProfile: React.FC = () => {
             const userId = localStorage.getItem("userId");
             if (userId) {
                 try {
-                    const response = await axios.get(`http://localhost:3001/${userId}`);
+                    const response = await axios.get(`http://localhost:3001/users/${userId}`);
                     const { user: userData } = response.data;
                     console.log("User data received:", userData);
                     setUserName(userData.username);
@@ -59,7 +59,7 @@ const UserProfile: React.FC = () => {
                 return;
             }
 
-            const response = await axios.get(`http://localhost:3001/posts/user/${userId}`);
+            const response = await axios.get(`http://localhost:3001/users/${userId}/posts`);
             const processedPosts = response.data.map((post: any) => ({
                 ...post,
                 likesCount: post.likesCount || 0,
@@ -84,7 +84,7 @@ const UserProfile: React.FC = () => {
 
     const handlePostClick = async (post: Post) => {
         try {
-            const postResponse = await axios.get(`http://localhost:3001/posts/${post._id}`);
+            const postResponse = await axios.get(`http://localhost:3001/posts/users/${post._id}`);
             const postData = postResponse.data;
 
             const commentsUrl = `http://localhost:3001/comments/post/${post._id}`;
@@ -160,7 +160,7 @@ const UserProfile: React.FC = () => {
                 return;
             }
     
-            const response = await axios.put(`http://localhost:3001/${userId}`, updatedUser, {
+            const response = await axios.put(`http://localhost:3001/users/${userId}`, updatedUser, {
                 headers: {
                     Authorization: `Bearer ${authToken}`, // הוסף את ההדר Authorization
                 },

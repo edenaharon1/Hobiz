@@ -11,6 +11,17 @@ beforeAll(async () => {
     await commentModel.deleteMany({});
   });
 
+  afterAll(async () => {
+    console.log('afterAll posts.test.ts');
+    
+    // קודם נבצע את פעולות הניקוי על המודלים
+    await postModel.deleteMany();
+    await commentModel.deleteMany();
+    
+    // ואז נסגור את החיבור למונגוDB
+    await mongoose.connection.close();
+  });
+
 describe("Posts Tests", () => {
     test("Posts test get all", async () => {
         const response = await request(app).get("/posts");
