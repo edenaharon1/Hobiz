@@ -176,11 +176,10 @@ const UserProfile: React.FC = () => {
 
     return (
         <div className={styles.profileContainer}>
-            <div className={styles.homeButton}>
-                <Link to="/Home">
-                    <img src={homeIcon} alt="Home" className={styles.homeIcon} />
-                </Link>
-            </div>
+            <button className={styles.backButton} onClick={() => navigate("/home")}>
+  ← Back
+</button>
+
 
             <h1 className={showPostsModal ? styles.hidden : ""}>User Profile</h1>
 
