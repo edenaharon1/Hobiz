@@ -13,6 +13,8 @@ import cors from "cors";
 import filerouter from "./routes/file_routes";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
+import { getChatCompletion } from "./chat";
+import chatRouter from "./routes/chat_routes";
 
 const app = express();
 
@@ -66,7 +68,8 @@ app.use("/comments", commentsRoute);
 app.use("/files", filerouter);
 app.use("/users", userRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")))
-
+// נתיב ה-API
+app.use("/api/chat", chatRouter);
 
 const db = mongoose.connection;
 db.on("error", (error) => console.error(error));
