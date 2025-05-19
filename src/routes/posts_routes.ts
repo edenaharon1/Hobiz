@@ -162,6 +162,76 @@ router.post("/", authMiddleware, async (req, res) => {
  *         description: Server error
  */
 router.delete("/:id", authMiddleware, postsController.deleteItem.bind(postsController));
+/**
+ * @swagger
+ * /posts/{id}/like:
+ *   put:
+ *     summary: Like a post
+ *     description: Adds a like to the post by the authenticated user
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the post to like
+ *     responses:
+ *       200:
+ *         description: Post liked successfully
+ *       404:
+ *         description: Post not found
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /posts/{id}:
+ *   put:
+ *     summary: Update a post
+ *     description: Update an existing post by ID. Allows updating title, content, and uploading an image.
+ *     tags:
+ *       - Posts
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID of the post to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 description: Updated title of the post
+ *               content:
+ *                 type: string
+ *                 description: Updated content of the post
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *                 description: Optional image to upload
+ *     responses:
+ *       200:
+ *         description: Post updated successfully
+ *       400:
+ *         description: Invalid input
+ *       404:
+ *         description: Post not found
+ *       500:
+ *         description: Server error
+ */
 
 router.put("/:id/like", authMiddleware, (req, res, next) => {
   console.log("Received PUT request for /posts/:id/like");

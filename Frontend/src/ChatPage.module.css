@@ -1,0 +1,153 @@
+/* Reset בסיסי */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* מיכל ראשי - תופס את כל המסך ללא מלבן מקיף */
+.chatContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;  /* גובה מלא */
+  width: 100%;        /* רוחב מלא */
+  background-color: transparent; /* אין רקע מלבן */
+  margin: 0;          /* אין שוליים */
+}
+
+/* כותרת עליונה */
+.chatHeader {
+  background-color: var(--primary-color); /* צבע ראשי */
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  flex-grow: 1;
+}
+
+.backButton {
+  background-color: var(--secondary-color); /* צבע משני */
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background-color var(--transition), filter var(--transition);
+}
+
+.backButton:hover {
+  filter: brightness(1.1);
+}
+
+/* אזור ההודעות */
+.chatMessages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 15px 20px;
+  background-color: transparent; /* ללא רקע כרטיסים */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.responseContainer {
+  background-color: white; /* רקע לבן להודעות */
+  color: var(--text-color);
+  padding: 10px 15px;
+  border-radius: var(--border-radius);
+  margin-bottom: 8px;
+  width: fit-content;
+  max-width: 80%;
+  align-self: flex-start;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.responseText {
+  margin-top: 5px;
+  font-size: 1rem;
+  white-space: pre-wrap;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* אזור הקלט */
+.chatInputArea {
+  display: flex;
+  padding: 15px 20px;
+  background-color: transparent; /* ללא רקע מלבן */
+  border-top: 1px solid #ccc;
+}
+
+.chatInput {
+  flex-grow: 1;
+  padding: 12px 15px;
+  font-size: 1.1rem;
+  border-radius: calc(var(--border-radius) / 2);
+  border: 1px solid #ccc;
+  margin-right: 10px;
+  color: var(--text-color);
+}
+
+.chatInput:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 5px rgba(var(--accent-color-rgb), 0.5);
+}
+
+.sendButton {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  border-radius: calc(var(--border-radius) / 2);
+  cursor: pointer;
+  transition: background-color var(--transition), transform var(--transition);
+}
+
+.sendButton:hover {
+  background-color: var(--secondary-color);
+  transform: scale(1.02);
+}
+
+/* גלילה נעימה */
+.chatMessages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 4px;
+}
+
+.chatMessages::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+.chatIntro {
+  padding: 10px 20px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.chatDescription {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 8px;
+  font-style: italic;
+}
+

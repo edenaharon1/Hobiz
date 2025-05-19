@@ -45,20 +45,25 @@ const HomeComponents: React.FC<HomeComponentsProps> = ({
             
             {/* Modern Navigation Sidebar */}
             <div className={styles.navbar}>
-                {/* Logo in the navbar */}
-                <div className={styles.navbarLogo}>
-                    <img src={Logo} alt="Logo" className={styles.logo} />
-                </div>
-                
-                <button className={styles.profileButton} onClick={() => window.location.href="/userprofile"}>
-                    Profile
-                </button>
-                <button className={styles.logoutButton} onClick={handleLogout}>
-                    Log Out
-                </button>
-            </div>
-    
-            {!selectedPost && <h1>My Feed</h1>}
+    {/* Logo in the navbar */}
+    <div className={styles.navbarLogo}>
+        <img src={Logo} alt="Logo" className={styles.logo} />
+    </div>
+
+    <button className={styles.profileButton} onClick={() => window.location.href="/userprofile"}>
+        Profile
+    </button>
+
+    {/* New Chat Button, same style as Profile */}
+    <button className={styles.profileButton} onClick={() => window.location.href="/chat"}>
+    AI Advisor
+    </button>
+
+    <button className={styles.logoutButton} onClick={handleLogout}>
+        Log Out
+    </button>
+</div>
+
     
             {/* Modern Posts Grid */}
             <div className={styles.postsContainer}>

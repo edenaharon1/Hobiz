@@ -46,7 +46,7 @@ describe("User Controller Tests", () => {
 
     test("getUserProfile", async () => {
         const response = await request(app)
-            .get(`/${testUser._id}`) // שינוי הנתיב ל-'/'
+            .get(`/users/${testUser._id}`) // חשוב: נתיב תקין לפי הקוד שלך הוא '/users/:id'
             .set("Authorization", `Bearer ${accessToken}`);
 
         expect(response.statusCode).toBe(200);
@@ -59,7 +59,7 @@ describe("User Controller Tests", () => {
         const updatedImage = "updatedimage.jpg";
 
         const response = await request(app)
-            .put(`/${testUser._id}`) // שינוי הנתיב ל-'/'
+            .put(`/users/${testUser._id}`) // נתיב תקין
             .set("Authorization", `Bearer ${accessToken}`)
             .send({
                 username: updatedUsername,
@@ -77,7 +77,7 @@ describe("User Controller Tests", () => {
 
     test("getUserPosts", async () => {
         const response = await request(app)
-            .get(`/posts/user/${testUser._id}`) // הנתיב הזה נראה תקין בהתאם ל-user_routes
+            .get(`/users/${testUser._id}/posts`) // נתיב נכון לפי הקוד שלך
             .set("Authorization", `Bearer ${accessToken}`);
 
         expect(response.statusCode).toBe(200);
@@ -88,7 +88,7 @@ describe("User Controller Tests", () => {
     test("getUserProfile - User not found", async () => {
         const nonExistentUserId = new mongoose.Types.ObjectId();
         const response = await request(app)
-            .get(`/${nonExistentUserId}`) // שינוי הנתיב ל-'/'
+            .get(`/users/${nonExistentUserId}`) // נתיב תקין
             .set("Authorization", `Bearer ${accessToken}`);
 
         expect(response.statusCode).toBe(404);
@@ -98,7 +98,7 @@ describe("User Controller Tests", () => {
     test("updateUserProfile - User not found", async () => {
         const nonExistentUserId = new mongoose.Types.ObjectId();
         const response = await request(app)
-            .put(`/${nonExistentUserId}`) // שינוי הנתיב ל-'/'
+            .put(`/users/${nonExistentUserId}`) // נתיב תקין
             .set("Authorization", `Bearer ${accessToken}`)
             .send({ username: "updateduser" });
 
@@ -115,7 +115,7 @@ describe("User Controller Tests", () => {
         const anotherAccessToken = jwt.sign({ _id: anotherUser._id }, process.env.TOKEN_SECRET || "secret", { expiresIn: '1h' });
 
         const response = await request(app)
-            .get(`/posts/user/${anotherUser._id}`) // הנתיב הזה נראה תקין
+            .get(`/users/${anotherUser._id}/posts`) // נתיב תקין לפי הקוד שלך
             .set("Authorization", `Bearer ${anotherAccessToken}`);
 
         expect(response.statusCode).toBe(404);

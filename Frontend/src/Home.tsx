@@ -40,7 +40,12 @@ const Home: React.FC = () => {
                     console.log("selectedPost.likedBy:", selectedPost.likedBy);
                     console.log("userId:", userId);
     
-                    setUserLiked(selectedPost.likedBy.some(id => id === userId)); // שימוש ב-some()
+                    // בדיקה אם המשתמש כבר לייקק את הפוסט
+                    const isLiked = selectedPost.likedBy.some(id => id === userId);
+                    setUserLiked(isLiked);
+    
+                    // שמור את סטטוס הלייק ב-localStorage
+                    localStorage.setItem(`likedPost_${selectedPost._id}`, JSON.stringify(isLiked));
     
                 } catch (error) {
                     console.error("Error decoding token:", error);
@@ -51,10 +56,20 @@ const Home: React.FC = () => {
             }
         };
     
-        checkLikeStatus();
-    }, [selectedPost]);
+        if (selectedPost) {
+            // בדוק אם יש מידע על הלייק ב-localStorage
+            const storedLikeStatus = localStorage.getItem(`likedPost_${selectedPost._id}`);
+            if (storedLikeStatus) {
+                setUserLiked(JSON.parse(storedLikeStatus)); // עדכון סטטוס הלייק מה-localStorage
+            } else {
+                checkLikeStatus(); // אם אין, בדוק כמו קודם
+            }
+        }
+    }, [selectedPost]); // עדכון הסטטוס בכל פעם שנבחר פוסט חדש
     
-
+    
+ 
+    
     const loadPosts = async () => {
         try {
             const data = await fetchPosts();
@@ -224,9 +239,9 @@ const Home: React.FC = () => {
             }
             const decodedToken = JSON.parse(atob(authToken.split('.')[1]));
             const userId = decodedToken._id; 
-
+    
             console.log("User ID from token:", userId); 
-
+    
             const response = await axios.put(
                 `http://localhost:3001/posts/${postId}/like`, // שליחת בקשת PUT לשרת
                 {}, // שליחת גוף ריק (אין צורך במידע נוסף)
@@ -247,8 +262,6 @@ const Home: React.FC = () => {
                     likedBy: response.data.likedBy,
                 });
             }
-            console.log("selectedPost:", selectedPost);
-            console.log("likedPosts:", likedPosts);
             setPosts((prevPosts) =>
                 prevPosts.map((post) =>
                     post._id === postId
@@ -266,13 +279,18 @@ const Home: React.FC = () => {
                     // אם הפוסט לא לייקק, הוספת לייק
                     return [...prevLikedPosts, postId];
                 }
-                
             });
+    
+            // עדכון הסטטוס ב-localStorage
+            localStorage.setItem(`likedPost_${postId}`, JSON.stringify(true)); // שמירת הלייק ב-localStorage
+    
         } catch (error) {
             console.error("Error liking post:", error); // הדפסת שגיאה לקונסולה
             alert("Failed to like post"); // הצגת התראה על שגיאה
         }
     };
+    
+    
 
     return (
         <div className={styles.homeContainer}>

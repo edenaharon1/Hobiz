@@ -3,74 +3,48 @@ const router = express.Router();
 import authController from "../controllers/auth_controller";
 
 /**
-* @swagger
-* tags:
-*   name: Auth
-*   description: The Authentication API
-*/
-
-/**
-* @swagger
-* components:
-*   securitySchemes:
-*     bearerAuth:
-*       type: http
-*       scheme: bearer
-*       bearerFormat: JWT
-*/
-
-
-/**
-* @swagger
-* components:
-*   schemas:
-*     User:
-*       type: object
-*       required:
-*         - email
-*         - password
-*       properties:
-*         email:
-*           type: string
-*           description: The user email
-*         password:
-*           type: string
-*           description: The user password
-*       example:
-*         email: 'bob@gmail.com'
-*         password: '123456'
-*/
-
-/**
-* @swagger
-* /auth/register:
-*   post:
-*     summary: registers a new user
-*     tags: [Auth]
-*     requestBody:
-*       required: true
-*       content:
-*         application/json:
-*           schema:
-*             $ref: '#/components/schemas/User'
-*     responses:
-*       200:
-*         description: The new user
-*         content:
-*           application/json:
-*             schema:
-*               $ref: '#/components/schemas/User'
-*/
-router.post("/register", authController.register);
+ * @swagger
+ * tags:
+ *   - name: Auth
+ *     description: The Authentication API
+ */
 
 /**
  * @swagger
- * /auth/login:
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: The user email
+ *           example: 'bob@gmail.com'
+ *         password:
+ *           type: string
+ *           description: The user password
+ *           example: '123456'
+ */
+
+/**
+ * @swagger
+ * /auth/register:
  *   post:
- *     summary: User login
- *     description: Authenticate user and return tokens
- *     tags:
- *       - Auth
+ *     summary: Registers a new user
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -79,36 +53,32 @@ router.post("/register", authController.register);
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: Successful login
+ *         description: The new user created successfully with access and refresh tokens
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 user:
+ *                   $ref: '#/components/schemas/User'
  *                 accessToken:
  *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                   description: The access token for the user
  *                 refreshToken:
  *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *                 _id:
- *                   type: string
- *                   example: 60d0fe4f5311236168a109ca
+ *                   description: The refresh token for the user
  *       400:
- *         description: Invalid credentials or request
+ *         description: Bad request, invalid user data
  *       500:
- *         description: Server error
+ *         description: Internal server error
  */
-router.post("/login", authController.login);
 
 /**
  * @swagger
- * /auth/refresh:
+ * /auth/login:
  *   post:
- *     summary: Refresh tokens
- *     description: Refresh access and refresh tokens using the provided refresh token
- *     tags:
- *       - Auth
+ *     summary: Login for an existing user
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -116,12 +86,15 @@ router.post("/login", authController.login);
  *           schema:
  *             type: object
  *             properties:
- *               refreshToken:
+ *               email:
  *                 type: string
- *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 description: The user email
+ *               password:
+ *                 type: string
+ *                 description: The user password
  *     responses:
  *       200:
- *         description: Tokens refreshed successfully
+ *         description: The user logged in successfully with access and refresh tokens
  *         content:
  *           application/json:
  *             schema:
@@ -129,25 +102,22 @@ router.post("/login", authController.login);
  *               properties:
  *                 accessToken:
  *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                   description: The access token for the user
  *                 refreshToken:
  *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                   description: The refresh token for the user
  *       400:
- *         description: Invalid refresh token
+ *         description: Invalid username or password
  *       500:
  *         description: Server error
  */
-router.post("/refresh", authController.refresh);
 
 /**
  * @swagger
  * /auth/logout:
  *   post:
- *     summary: User logout
- *     description: Logout user and invalidate the refresh token
- *     tags:
- *       - Auth
+ *     summary: Logout and invalidate the refresh token
+ *     tags: [Auth]
  *     requestBody:
  *       required: true
  *       content:
@@ -157,18 +127,129 @@ router.post("/refresh", authController.refresh);
  *             properties:
  *               refreshToken:
  *                 type: string
- *                 example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ *                 description: The refresh token to invalidate
  *     responses:
  *       200:
- *         description: Successful logout
+ *         description: Successfully logged out
  *       400:
  *         description: Invalid refresh token
  *       500:
  *         description: Server error
  */
-router.post("/logout", authController.logout);
 
+/**
+ * @swagger
+ * /auth/refresh:
+ *   post:
+ *     summary: Refresh the access token using the refresh token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *                 description: The refresh token to generate a new access token
+ *     responses:
+ *       200:
+ *         description: Successfully refreshed access token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   description: The new access token
+ *                 refreshToken:
+ *                   type: string
+ *                   description: The new refresh token
+ *       400:
+ *         description: Invalid refresh token
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /auth/google-login:
+ *   post:
+ *     summary: Login with Google account
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Google ID token
+ *     responses:
+ *       200:
+ *         description: Successfully logged in with Google account
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   description: The access token for the user
+ *                 refreshToken:
+ *                   type: string
+ *                   description: The refresh token for the user
+ *       400:
+ *         description: Invalid Google token or user already exists
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /auth/google-signup:
+ *   post:
+ *     summary: Sign up with Google account
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Google ID token
+ *     responses:
+ *       200:
+ *         description: Successfully signed up with Google account
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: string
+ *                   description: The access token for the user
+ *                 refreshToken:
+ *                   type: string
+ *                   description: The refresh token for the user
+ *       400:
+ *         description: Invalid Google token or user already exists
+ *       500:
+ *         description: Server error
+ */
+
+router.post("/register", authController.register);
+router.post("/login", authController.login);
+router.post("/logout", authController.logout);
+router.post("/refresh", authController.refresh);
 router.post("/google-login", authController.googleLogin);
-router.post("/google-signup", authController.googleSignUp); 
+router.post("/google-signup", authController.googleSignUp);
 
 export default router;

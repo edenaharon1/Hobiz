@@ -38,9 +38,6 @@ beforeAll(async () => {
     console.log("testUser:", testUser);
 });
 
-afterAll(async () => {
-    console.log("Global afterAll");
-    await mongoose.connection.close();
-});
+
 
 export { app };

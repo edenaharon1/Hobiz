@@ -239,17 +239,15 @@ type tUser = Document<unknown, {}, IUser> &
     
             jwt.verify(refreshToken, process.env.TOKEN_SECRET, async (err: any, payload: any) => {
                 if (err) {
-                    console.log("❌ אימות טוקן נכשל:", err);
                     return reject('fail');
                 }
     
                 const userId = payload._id;
-                console.log("✅ טוקן תקין, מזהה משתמש:", userId);
+               
     
                 try {
                     const user = await userModel.findById(userId);
                     if (!user) {
-                        console.log("❌ לא נמצא משתמש לפי ה-ID");
                         return reject('fail');
                     }
     
@@ -258,30 +256,29 @@ type tUser = Document<unknown, {}, IUser> &
                     console.log("refreshToken של המשתמש:", user.refreshToken); // הוסף לוג כאן
     
                     if (!user.refreshToken || !user.refreshToken.includes(refreshToken)) {
-                        console.log("🚫 הטוקן לא נמצא ברשימת הטוקנים של המשתמש");
+                       
                         user.refreshToken = [];
                         await user.save();
                         return reject('fail');
                     }
     
-                    console.log("📌 לפני מחיקת הטוקן:", user.refreshToken);
+            
                     user.refreshToken = user.refreshToken.filter(token => token !== refreshToken);
                     await user.save();
-                    console.log("✅ אחרי מחיקת הטוקן:", user.refreshToken);
+        
     
                     const updatedUser = await userModel.findById(userId);
                     if (!updatedUser) {
-                        console.log("❌ שגיאה בטעינה מחודשת של המשתמש");
+            
                         return reject('fail');
                     }
     
-                    console.log("🎯 מחזיר את המשתמש המאומת");
+                    
                     resolve({
                         ...updatedUser.toObject(),
                         _id: updatedUser._id.toString(),
                     } as tUser);
                 } catch (err) {
-                    console.log("❌ שגיאה כללית:", err);
                     return reject('fail');
                 }
             });

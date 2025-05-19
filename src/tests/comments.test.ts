@@ -17,6 +17,16 @@ beforeAll(async () => {
     ]);
 });
 
+afterAll(async () => {
+    console.log('afterAll comments.test.ts');
+    
+    // קודם נבצע את פעולות הניקוי
+    await commentsModel.deleteMany();
+    
+    // ואז נסגור את החיבור למונגוDB
+    await mongoose.connection.close();
+  });
+
 describe("comment test suite", () => {
     test("comment test get all", async () => {
         const response = await request(app).get("/comments");
