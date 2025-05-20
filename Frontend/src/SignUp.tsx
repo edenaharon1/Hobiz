@@ -19,12 +19,27 @@ const SignUp: React.FC = () => {
                 email: email,
                 password: password
             });
-            console.log("Sign Up Successful:", response.data);
-            navigate('/home'); // או לדף אחר שתבחר
+    
+            if (response.status === 201 || response.status === 200) { // בדיקה שההרשמה הצליחה
+                // שמירת הטוקן וה-UserID ב-localStorage אם הם מגיעים בתגובה
+                if (response.data.accessToken && response.data._id) {
+                    localStorage.setItem('authToken', response.data.accessToken);
+                    localStorage.setItem('userId', response.data._id);
+                    console.log("Saved token to localStorage:", response.data.accessToken);
+                } else {
+                    console.warn("No token or user ID returned on sign up");
+                }
+                
+                navigate('/home'); // ניווט לדף הבית או אחר
+            } else {
+                console.error("Unexpected response status on sign up:", response.status);
+            }
+    
         } catch (error) {
             console.error("Sign Up Failed:", error);
         }
     };
+    
 
     const handleGoogleSignUpSuccess = async (credentialResponse: any) => {
         const credential = credentialResponse?.credential;

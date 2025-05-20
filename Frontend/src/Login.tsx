@@ -44,28 +44,27 @@ const Login: React.FC = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3001/auth/login', { email, password });
-
+    
             if (response.status === 200) { // בדיקה שהבקשה הצליחה
+                // שמירת הטוקן וה-UserID ב-localStorage
                 localStorage.setItem('authToken', response.data.accessToken);
                 localStorage.setItem('userId', response.data._id);
-                localStorage.setItem("authToken", response.data.accessToken);
+    
                 console.log("Saved token to localStorage:", response.data.accessToken);
                 navigate('/home');
             } else {
                 setError('Invalid email or password');
             }
         } catch (err) {
-            console.error("Login error:", err); // הוספה כאן
+            console.error("Login error:", err);
             if (axios.isAxiosError(err) && err.response && err.response.status === 401) {
                 setError('Invalid email or password');
             } else {
                 setError('Login failed. Please try again.');
             }
-
         }
-        
     };
-
+    
 
     return (
         <div className={styles.loginContainer}>

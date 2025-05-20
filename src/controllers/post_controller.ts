@@ -77,6 +77,8 @@ class PostsController extends BaseController<IPost> {
 
 
     async likePost(req: Request, res: Response): Promise<void> {
+        console.log("userId from req.user:", req.user);
+
         try {
             const postId = req.params.id;
             if (!req.user) {

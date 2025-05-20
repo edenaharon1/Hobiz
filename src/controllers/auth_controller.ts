@@ -327,37 +327,45 @@ type Payload = {
     _id: string;
 };
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    console.log("started authentication");
-    const authorization = req.header('authorization');
-    const token = authorization && authorization.split(' ')[1];
-
-    console.log("Token received:", token);
-
+export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+    console.log("🚀 Starting authentication middleware");
+  
+    const authHeader = req.header('authorization');
+    console.log("Authorization header:", authHeader);
+  
+    const token = authHeader?.startsWith('Bearer ')
+      ? authHeader.split(' ')[1]
+      : null;
+  
+    console.log("Token extracted:", token);
+  
     if (!token) {
-        console.log("Token not provided");
+      console.log("❌ No token provided");
+      res.status(401).send('Access Denied');
+      return; // הפונקציה תחזור בלי להחזיר את ה-Response עצמו
+    }
+  
+    const secret = process.env.TOKEN_SECRET;
+    if (!secret) {
+      console.error("❌ TOKEN_SECRET is not defined");
+      res.status(500).send('Server Error');
+      return;
+    }
+  
+    jwt.verify(token, secret, (err, payload) => {
+      if (err) {
+        console.log("❌ Token verification failed:", err.message);
         res.status(401).send('Access Denied');
         return;
-    }
-
-    if (!process.env.TOKEN_SECRET) {
-        console.error("TOKEN_SECRET is not defined");
-        res.status(500).send('Server Error');
-        return;
-    }
-
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, payload) => {
-        if (err) {
-            console.log("Token verification failed:", err);
-            res.status(401).send('Access Denied');
-            return;
-        }
-
-        console.log("Token payload:", payload); // הדפסה אחת מספיקה
-        req.user = (payload as Payload)._id; // הקצאה אחת מספיקה
-        next();
+      }
+      console.log("Token payload:", payload);
+      const { _id } = payload as Payload;
+      console.log("✅ Token payload, user ID:", _id);
+  
+      req.user = _id; // הגדרת user בתוך ה-req
+      next(); // ממשיכים למידלוור או ראוט הבא
     });
-};
+  };
 
 export default {
     register: register as (req: Request, res: Response) => Promise<void>,
