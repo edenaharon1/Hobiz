@@ -158,9 +158,11 @@ const register = async (req: Request, res: Response) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const user = await userModel.create({
+            username: req.body.username, // ⬅️ שדה השם שנשלח מהקליינט
             email: req.body.email,
             password: hashedPassword,
         });
+        
 
         // Generate token after user creation
         const tokens = generateToken(user._id.toString()); // user._id is an object, so convert to string

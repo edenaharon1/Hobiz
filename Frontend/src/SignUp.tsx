@@ -21,16 +21,17 @@ const SignUp: React.FC = () => {
             });
     
             if (response.status === 201 || response.status === 200) { // בדיקה שההרשמה הצליחה
-                // שמירת הטוקן וה-UserID ב-localStorage אם הם מגיעים בתגובה
-                if (response.data.accessToken && response.data._id) {
+                console.log("Sign Up response data:", response.data);
+                // שים לב שה-userId נמצא בתוך response.data.user._id
+                if (response.data.accessToken && response.data.user && response.data.user._id) {
                     localStorage.setItem('authToken', response.data.accessToken);
-                    localStorage.setItem('userId', response.data._id);
-                    console.log("Saved token to localStorage:", response.data.accessToken);
+                    localStorage.setItem('userId', response.data.user._id);
+                    console.log("Saved token and userId to localStorage:", response.data.accessToken, response.data.user._id);
                 } else {
                     console.warn("No token or user ID returned on sign up");
                 }
-                
-                navigate('/home'); // ניווט לדף הבית או אחר
+    
+                navigate('/home'); // ניווט לדף הבית או לדף אחר
             } else {
                 console.error("Unexpected response status on sign up:", response.status);
             }
@@ -39,6 +40,7 @@ const SignUp: React.FC = () => {
             console.error("Sign Up Failed:", error);
         }
     };
+    
     
 
     const handleGoogleSignUpSuccess = async (credentialResponse: any) => {

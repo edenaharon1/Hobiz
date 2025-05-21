@@ -108,8 +108,8 @@ const Login: React.FC = () => {
                 </div>
             </div>
             <button className={styles.signupButton}>
-                <Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
-            </button>
+    <Link to="/signup" style={{ color: 'white', textDecoration: 'none' }}>Sign Up</Link>
+</button>
         </div>
     );
 };
