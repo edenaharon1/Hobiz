@@ -19,17 +19,17 @@ const Login: React.FC = () => {
 
 
     const handleGoogleLoginSuccess = async (credentialResponse: any) => {
-        console.log(import.meta.env.VITE_TEST_ENV);
         try {
-            console.log("mishtane:",);
             const response = await axios.post(`http://localhost:3001/auth/google-login`, {
                 token: credentialResponse.credential,
             });
+            console.log("Google login full response data:", response.data);
     
             if (response.status === 200) {
-                localStorage.setItem('authToken', response.data.accessToken);
-                localStorage.setItem('userId', response.data._id);
-                console.log("Saved token to localStorage:", response.data.accessToken);
+                const { accessToken, _id } = response.data;  // תיקנתי כאן
+                localStorage.setItem('authToken', accessToken);
+                localStorage.setItem('userId', _id);        // השתמש כאן ב-_id
+                console.log("Saved token and userId to localStorage:", accessToken, _id);
                 navigate('/home');
             } else {
                 setError('Google login failed.');
@@ -39,18 +39,21 @@ const Login: React.FC = () => {
             setError('Google login failed. Please try again.');
         }
     };
+    
+    
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:3001/auth/login', { email, password });
     
-            if (response.status === 200) { // בדיקה שהבקשה הצליחה
-                // שמירת הטוקן וה-UserID ב-localStorage
-                localStorage.setItem('authToken', response.data.accessToken);
-                localStorage.setItem('userId', response.data._id);
+            if (response.status === 200) {
+                const { accessToken, user } = response.data;
     
-                console.log("Saved token to localStorage:", response.data.accessToken);
+                localStorage.setItem('authToken', accessToken);
+                localStorage.setItem('userId', user._id); // כאן השינוי הקריטי
+    
+                console.log("Saved token and userId to localStorage:", accessToken, user._id);
                 navigate('/home');
             } else {
                 setError('Invalid email or password');
@@ -64,6 +67,7 @@ const Login: React.FC = () => {
             }
         }
     };
+    
     
 
     return (

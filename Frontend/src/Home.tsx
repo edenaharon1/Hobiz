@@ -185,10 +185,9 @@ const Home: React.FC = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("authToken");
-        localStorage.removeItem("userId"); // מוחק גם את ה-userId
-        // אם יש state של המשתמש, לשנות אותו כאן, למשל setUser(null)
-        navigate("/login");
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userId');
+        navigate('/login');
     };
     
     const handleAddComment = async () => {
