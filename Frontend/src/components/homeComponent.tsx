@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import styles from './Home.module.css';
+
+import styles from '../pages/HomePage/Home.module.css';
 import { FaComment } from 'react-icons/fa';
-import CreatePostModal from '../CreatePostModal';
-import { Post } from "../Api"
+import CreatePostModal from './CreatePostModal/CreatePostModal';
+import { Post } from "../services/Api"
 import Logo from "../Images/logo (2).png";
 
 interface HomeComponentsProps {
@@ -27,7 +27,6 @@ interface HomeComponentsProps {
 const HomeComponents: React.FC<HomeComponentsProps> = ({
     posts,
     selectedPost,
-    username,
     newComment,
     likedPosts,
     isModalOpen,
