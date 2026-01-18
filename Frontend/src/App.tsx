@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google"; // ייבוא ה-Provider
-import Login from "./Login";
-import SignUp from "./SignUp";
-import Home from "./Home";
-import UserProfile from "./UserProfile";
-import ChatPage from "./ChatPage";
+import Login from "./pages/LoginPage/Login";
+import SignUp from "./pages/SignUpPage/SignUp";
+import Home from './pages/HomePage/Home';
+import UserProfile from "./pages/UserProfilePage/UserProfile";
+import ChatPage from "./pages/ChatPage/ChatPage";
 
 const clientId = "569640409434-4pjdbccv7ffncci0bok69f13cukrbfgf.apps.googleusercontent.com"; // מזהה הלקוח שלך
 
